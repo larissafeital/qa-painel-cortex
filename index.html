@@ -292,6 +292,16 @@
       padding-top: 10px;
     }
 
+    /* ── RENOVAÇÃO & EVOLUÇÃO ── */
+    .renov-section {
+      background: white;
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+      margin-bottom: 20px;
+    }
+    .renov-section-title { font-size: 14px; font-weight: 700; margin-bottom: 20px; }
+
     /* ── FOOTER ── */
     footer { text-align: center; color: var(--text-subtle); font-size: 11px; margin-top: 8px; padding-bottom: 8px; }
   </style>
@@ -339,6 +349,43 @@
       </div>
     </div>
     <canvas id="chartNPSvsImpacto" height="200"></canvas>
+  </div>
+</div>
+
+<!-- RENOVAÇÃO & EVOLUÇÃO -->
+<div class="renov-section">
+  <div class="renov-section-title">Renovação & Evolução</div>
+  <div class="charts-row cols-2" style="margin-bottom:20px;">
+    <div class="chart-card">
+      <div class="chart-title">Dias para Renovação</div>
+      <div class="chart-sub">Contagem regressiva por cliente</div>
+      <canvas id="chartRenovacao" height="140"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-header">
+        <div>
+          <div class="chart-title">Elogios vs Críticas</div>
+          <div class="chart-sub">Por cliente — ciclo atual</div>
+        </div>
+        <div class="chart-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:rgba(139,45,191,0.85)"></div>Elogios</div>
+          <div class="legend-item"><div class="legend-dot" style="background:rgba(245,160,32,0.85)"></div>Críticas</div>
+        </div>
+      </div>
+      <canvas id="chartElogiosCriticas" height="140"></canvas>
+    </div>
+  </div>
+  <div class="charts-row cols-2">
+    <div class="chart-card">
+      <div class="chart-title">QAs Realizados por Cliente</div>
+      <div class="chart-sub">Total acumulado</div>
+      <canvas id="chartQACount" height="140"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Tendência de Notas de Onboarding</div>
+      <div class="chart-sub">Evolução por ciclo de QA</div>
+      <canvas id="chartTendencia" height="140"></canvas>
+    </div>
   </div>
 </div>
 
@@ -672,6 +719,118 @@
       scales: {
         y: { min: 0, max: 10, ticks: { stepSize: 2 }, grid: { color: GRID_COLOR } },
         x: { grid: { display: false } }
+      }
+    }
+  });
+
+  // ── RENOVAÇÃO ─────────────────────────────────────────────────────────
+  function daysUntil(dateStr) {
+    const today = new Date(); today.setHours(0,0,0,0);
+    return Math.ceil((new Date(dateStr) - today) / 86400000);
+  }
+  const diasRenov = DATA_RENOVACAO.map(daysUntil);
+  const renovColors = diasRenov.map(d =>
+    d > 180 ? 'rgba(0,77,58,0.8)' : d > 90 ? 'rgba(144,204,229,0.9)' : 'rgba(214,74,23,0.85)'
+  );
+  new Chart('chartRenovacao', {
+    type: 'bar',
+    data: {
+      labels: CLIENTS,
+      datasets: [{ label: 'Dias', data: diasRenov, backgroundColor: renovColors, borderRadius: 6 }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: c => ` ${c.raw} dias para renovação` } },
+        datalabels: { anchor: 'end', align: 'end', offset: 4, color: '#1E293B', font: { size: 12, weight: '700' }, formatter: v => `${v}d` }
+      },
+      scales: {
+        x: { ticks: { stepSize: 60 }, grid: { color: GRID_COLOR } },
+        y: { grid: { display: false } }
+      }
+    }
+  });
+
+  // ── ELOGIOS VS CRÍTICAS ───────────────────────────────────────────────
+  const elogios = CLIENTS.map(c => (HISTORICO[c] || []).reduce((s, q) => s + q.elogios, 0));
+  const criticas = CLIENTS.map(c => (HISTORICO[c] || []).reduce((s, q) => s + q.criticas, 0));
+  new Chart('chartElogiosCriticas', {
+    type: 'bar',
+    data: {
+      labels: CLIENTS,
+      datasets: [
+        { label: 'Elogios', data: elogios, backgroundColor: `${C_PURPLE}0.85)`, borderRadius: 4 },
+        { label: 'Críticas', data: criticas, backgroundColor: 'rgba(245,160,32,0.85)', borderRadius: 4 }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${c.raw}` } },
+        datalabels: { anchor: 'end', align: 'end', offset: 2, color: '#1E293B', font: { size: 12, weight: '700' }, formatter: v => v }
+      },
+      scales: {
+        x: { grid: { display: false } },
+        y: { min: 0, ticks: { stepSize: 1 }, grid: { color: GRID_COLOR } }
+      }
+    }
+  });
+
+  // ── QAs REALIZADOS ────────────────────────────────────────────────────
+  const qaCounts = CLIENTS.map(c => (HISTORICO[c] || []).length);
+  new Chart('chartQACount', {
+    type: 'bar',
+    data: {
+      labels: CLIENTS,
+      datasets: [{ label: 'QAs', data: qaCounts, backgroundColor: `${C_PURPLE}0.75)`, borderRadius: 6 }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: c => ` ${c.raw} QA${c.raw !== 1 ? 's' : ''} realizado${c.raw !== 1 ? 's' : ''}` } },
+        datalabels: { anchor: 'end', align: 'end', offset: 2, color: '#1E293B', font: { size: 12, weight: '700' }, formatter: v => v }
+      },
+      scales: {
+        y: { min: 0, ticks: { stepSize: 1 }, grid: { color: GRID_COLOR } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+
+  // ── TENDÊNCIA DE NOTAS ────────────────────────────────────────────────
+  const trendBorders = ['rgba(139,45,191,1)', 'rgba(146,27,69,1)', 'rgba(0,77,58,1)'];
+  const trendBgs     = ['rgba(139,45,191,0.5)', 'rgba(146,27,69,0.5)', 'rgba(0,77,58,0.5)'];
+  const maxCycles = Math.max(...CLIENTS.map(c => (HISTORICO[c] || []).length));
+  const cycleLabels = Array.from({ length: Math.max(maxCycles, 2) }, (_, i) => `QA ${i + 1}`);
+  const trendDatasets = CLIENTS.map((client, i) => {
+    const hist = HISTORICO[client] || [];
+    return {
+      label: client,
+      data: cycleLabels.map((_, idx) => hist[idx] ? hist[idx].onboarding : null),
+      borderColor: trendBorders[i],
+      backgroundColor: trendBgs[i],
+      pointRadius: 5,
+      tension: 0.3,
+      spanGaps: false,
+    };
+  });
+  new Chart('chartTendencia', {
+    type: 'line',
+    data: { labels: cycleLabels, datasets: trendDatasets },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } },
+        tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${c.raw ?? '—'}` } },
+        datalabels: { display: false }
+      },
+      scales: {
+        x: { grid: { color: GRID_COLOR } },
+        y: { min: 0, max: 10, ticks: { stepSize: 2 }, grid: { color: GRID_COLOR } }
       }
     }
   });
