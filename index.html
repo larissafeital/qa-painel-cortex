@@ -350,6 +350,42 @@
   </div>
 </div>
 
+<!-- VOZ DO CLIENTE -->
+<div class="voz-header">
+  <div class="voz-title">Voz do Cliente</div>
+</div>
+
+<div class="voz-grid">
+
+  <div class="voz-card promotor">
+    <div class="voz-pattern">Volvo · Onboarding 10</div>
+    <ul class="voz-bullets">
+      <li>"O atendimento é de uma agilidade maravilhosa — a proatividade em questionar sobre o clipping em feriados demonstra um cuidado que a gente não tinha antes."</li>
+      <li>"Tivemos um desconforto inicial com a metodologia de valoração, por ser bem diferente das clipadoras tradicionais — mas resolvemos isso com um workshop e ficou claro o valor da abordagem."</li>
+    </ul>
+    <div class="voz-autor">— Equipe Volvo</div>
+  </div>
+
+  <div class="voz-card promotor">
+    <div class="voz-pattern">BHP · Onboarding 10</div>
+    <ul class="voz-bullets">
+      <li>"Preferimos dois meses de implantação cuidadosa a receber uma solução pronta, sem personalização — esse tempo foi necessário para garantir resultados relevantes."</li>
+      <li>"A paciência e receptividade da equipe frente às nossas mudanças internas constantes foi fundamental para o sucesso do projeto."</li>
+    </ul>
+    <div class="voz-autor">— Ricardo Gioia · BHP</div>
+  </div>
+
+  <div class="voz-card detrator">
+    <div class="voz-pattern">Tramontina · Onboarding 6</div>
+    <ul class="voz-bullets">
+      <li>"A expectativa era ter revisão manual de classificações e cobertura de TV e rádio — nenhuma das duas estava no contrato. Só ficou claro depois de assinar."</li>
+      <li>"Uma imersão na plataforma antes de fechar o contrato teria eliminado 90% dos ruídos — a gente teria entendido exatamente o que estava contratando."</li>
+    </ul>
+    <div class="voz-autor">— Marcelo Torri · FTcom (Tramontina)</div>
+  </div>
+
+</div>
+
 <!-- RENOVAÇÃO & EVOLUÇÃO -->
 <div class="renov-section">
   <div class="renov-section-title">Renovação & Evolução</div>
@@ -385,42 +421,6 @@
       <canvas id="chartTendencia" height="170"></canvas>
     </div>
   </div>
-</div>
-
-<!-- VOZ DO CLIENTE -->
-<div class="voz-header">
-  <div class="voz-title">Voz do Cliente</div>
-</div>
-
-<div class="voz-grid">
-
-  <div class="voz-card promotor">
-    <div class="voz-pattern">Volvo · Onboarding 10</div>
-    <ul class="voz-bullets">
-      <li>"O atendimento é de uma agilidade maravilhosa — a proatividade em questionar sobre o clipping em feriados demonstra um cuidado que a gente não tinha antes."</li>
-      <li>"Tivemos um desconforto inicial com a metodologia de valoração, por ser bem diferente das clipadoras tradicionais — mas resolvemos isso com um workshop e ficou claro o valor da abordagem."</li>
-    </ul>
-    <div class="voz-autor">— Equipe Volvo</div>
-  </div>
-
-  <div class="voz-card promotor">
-    <div class="voz-pattern">BHP · Onboarding 10</div>
-    <ul class="voz-bullets">
-      <li>"Preferimos dois meses de implantação cuidadosa a receber uma solução pronta, sem personalização — esse tempo foi necessário para garantir resultados relevantes."</li>
-      <li>"A paciência e receptividade da equipe frente às nossas mudanças internas constantes foi fundamental para o sucesso do projeto."</li>
-    </ul>
-    <div class="voz-autor">— Ricardo Gioia · BHP</div>
-  </div>
-
-  <div class="voz-card detrator">
-    <div class="voz-pattern">Tramontina · Onboarding 6</div>
-    <ul class="voz-bullets">
-      <li>"A expectativa era ter revisão manual de classificações e cobertura de TV e rádio — nenhuma das duas estava no contrato. Só ficou claro depois de assinar."</li>
-      <li>"Uma imersão na plataforma antes de fechar o contrato teria eliminado 90% dos ruídos — a gente teria entendido exatamente o que estava contratando."</li>
-    </ul>
-    <div class="voz-autor">— Marcelo Torri · FTcom (Tramontina)</div>
-  </div>
-
 </div>
 
 <!-- TABLE -->
@@ -825,10 +825,15 @@
       label: client,
       data: cycleLabels.map((_, idx) => hist[idx] ? hist[idx].onboarding : null),
       borderColor: trendBorders[i],
-      backgroundColor: trendBgs[i],
-      pointRadius: 5,
+      backgroundColor: '#fff',
+      pointRadius: 8,
+      pointHoverRadius: 10,
+      pointBorderWidth: 3,
+      pointBorderColor: trendBorders[i],
+      pointBackgroundColor: '#fff',
       tension: 0.3,
       spanGaps: false,
+      borderWidth: 2,
     };
   });
   new Chart('chartTendencia', {
