@@ -300,11 +300,32 @@
       margin-bottom: 16px;
     }
 
+    /* ── BANNER ATUALIZAÇÃO ── */
+    .update-banner {
+      background: #FEF9EC;
+      border: 1px solid #F5A020;
+      border-radius: 10px;
+      padding: 10px 16px;
+      margin-bottom: 20px;
+      font-size: 12px;
+      color: #A06010;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .update-banner strong { font-weight: 700; }
+
     /* ── FOOTER ── */
     footer { text-align: center; color: var(--text-subtle); font-size: 11px; margin-top: 8px; padding-bottom: 8px; }
   </style>
 </head>
 <body>
+
+<!-- BANNER -->
+<div class="update-banner" id="updateBanner">
+  ⏱ <span><strong>Após cada atualização,</strong> aguarde até 5 minutos para o painel refletir as mudanças. Se não atualizar, pressione <strong>Cmd + Shift + R</strong> (Mac) ou abra em aba anônima.</span>
+  <span style="margin-left:auto; cursor:pointer; font-size:14px; opacity:0.5;" onclick="document.getElementById('updateBanner').style.display='none'">✕</span>
+</div>
 
 <!-- HEADER -->
 <div class="header">
