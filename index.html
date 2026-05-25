@@ -810,7 +810,7 @@
     type: 'bar',
     data: {
       labels: CLIENTS,
-      datasets: [{ label: 'QAs', data: qaCounts, backgroundColor: qaCounts.map(v => scoreColor(v >= 3 ? 9 : v >= 2 ? 7 : 5, 0.75)), borderRadius: 6, barPercentage: 0.5 }]
+      datasets: [{ label: 'QAs', data: qaCounts, backgroundColor: 'rgba(101,67,33,0.75)', borderRadius: 6, barPercentage: 0.5 }]
     },
     options: {
       responsive: true,
