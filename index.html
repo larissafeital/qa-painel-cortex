@@ -436,11 +436,7 @@
     </div>
   </div>
   <div class="charts-row cols-1">
-    <div class="chart-card" style="padding:28px 28px 24px;">
-      <div class="chart-title">Tendência de Notas de Onboarding</div>
-      <div class="chart-sub">Evolução por ciclo de QA — cresce conforme novos QAs forem adicionados</div>
-      <canvas id="chartTendencia" height="100"></canvas>
-    </div>
+    <div class="chart-card" style="padding:28px 28px 24px;" id="cardTendencia"></div>
   </div>
 </div>
 
@@ -836,48 +832,54 @@
   });
 
   // ── TENDÊNCIA DE NOTAS ────────────────────────────────────────────────
-  const trendBorders = ['rgba(139,45,191,1)', 'rgba(146,27,69,1)', 'rgba(0,77,58,1)'];
-  const trendBgs     = ['rgba(139,45,191,0.5)', 'rgba(146,27,69,0.5)', 'rgba(0,77,58,0.5)'];
   const maxCycles = Math.max(...CLIENTS.map(c => (HISTORICO[c] || []).length));
-  const cycleLabels = Array.from({ length: Math.max(maxCycles, 2) }, (_, i) => `QA ${i + 1}`);
-  const trendDatasets = CLIENTS.map((client, i) => {
-    const hist = HISTORICO[client] || [];
-    return {
-      label: client,
-      data: cycleLabels.map((_, idx) => hist[idx] ? hist[idx].onboarding : null),
-      borderColor: trendBorders[i],
-      backgroundColor: '#fff',
-      pointRadius: 8,
-      pointHoverRadius: 10,
-      pointBorderWidth: 3,
-      pointBorderColor: trendBorders[i],
-      pointBackgroundColor: '#fff',
-      tension: 0.3,
-      spanGaps: false,
-      borderWidth: 2,
-    };
-  });
-  new Chart('chartTendencia', {
-    type: 'line',
-    data: { labels: cycleLabels, datasets: trendDatasets },
-    options: {
-      responsive: true,
-      layout: { padding: { top: 16, right: 12 } },
-      plugins: {
-        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 }, padding: 16 } },
-        tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${c.raw ?? '—'}` } },
-        datalabels: {
-          anchor: 'top', align: 'top', offset: 6,
-          color: '#475569', font: { size: 11, weight: '700' },
-          formatter: v => v ?? ''
+  const cardTendencia = document.getElementById('cardTendencia');
+
+  if (maxCycles < 2) {
+    cardTendencia.innerHTML = `
+      <div class="chart-title">Tendência de Notas de Onboarding</div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:160px;gap:10px;color:var(--text-placeholder);text-align:center;">
+        <span style="font-size:32px;">📈</span>
+        <span style="font-size:13px;font-weight:600;color:var(--text-muted);">Disponível a partir do 2º ciclo de QA</span>
+        <span style="font-size:12px;max-width:320px;line-height:1.6;">Quando um cliente tiver pelo menos dois QAs registrados, a evolução das notas aparecerá aqui automaticamente.</span>
+      </div>`;
+  } else {
+    cardTendencia.innerHTML = `
+      <div class="chart-title">Tendência de Notas de Onboarding</div>
+      <div class="chart-sub">Evolução por ciclo de QA</div>
+      <canvas id="chartTendencia" height="110"></canvas>`;
+    const trendBorders = ['rgba(139,45,191,1)', 'rgba(146,27,69,1)', 'rgba(0,77,58,1)'];
+    const cycleLabels = Array.from({ length: maxCycles }, (_, i) => `QA ${i + 1}`);
+    const trendDatasets = CLIENTS.map((client, i) => {
+      const hist = HISTORICO[client] || [];
+      return {
+        label: client,
+        data: cycleLabels.map((_, idx) => hist[idx] ? hist[idx].onboarding : null),
+        borderColor: trendBorders[i],
+        backgroundColor: '#fff',
+        pointRadius: 8, pointHoverRadius: 10,
+        pointBorderWidth: 3, pointBorderColor: trendBorders[i], pointBackgroundColor: '#fff',
+        tension: 0.3, spanGaps: false, borderWidth: 2,
+      };
+    });
+    new Chart('chartTendencia', {
+      type: 'line',
+      data: { labels: cycleLabels, datasets: trendDatasets },
+      options: {
+        responsive: true,
+        layout: { padding: { top: 20, right: 12 } },
+        plugins: {
+          legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 }, padding: 16 } },
+          tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${c.raw ?? '—'}` } },
+          datalabels: { anchor: 'top', align: 'top', offset: 6, color: '#475569', font: { size: 11, weight: '700' }, formatter: v => v ?? '' }
+        },
+        scales: {
+          x: { grid: { color: GRID_COLOR } },
+          y: { min: 0, max: 10, ticks: { stepSize: 2 }, grid: { color: GRID_COLOR } }
         }
-      },
-      scales: {
-        x: { grid: { color: GRID_COLOR } },
-        y: { min: 0, max: 10, ticks: { stepSize: 2 }, grid: { color: GRID_COLOR } }
       }
-    }
-  });
+    });
+  }
 
   function togglePatterns(btn) {
     const visual = document.getElementById('patternsVisual');
