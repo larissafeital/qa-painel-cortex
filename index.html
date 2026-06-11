@@ -515,9 +515,11 @@
 </div>
 
 <!-- INSIGHTS -->
-<div class="voz-header">
+<div class="voz-header" style="display:flex;align-items:center;justify-content:space-between;">
   <div class="voz-title">Leituras do QA</div>
+  <button class="patterns-toggle" onclick="toggleInsightsBody(this)">Ver leituras ▾</button>
 </div>
+<div id="insightsBody" style="display:none;">
 <div class="insights-row">
   <div class="insight">
     <div class="insight-title" style="color:var(--nps-promotor);">✓ O que está funcionando</div>
@@ -574,6 +576,7 @@
     </div>
   </div>
 </div>
+</div><!-- /insightsBody -->
 
 <!-- PADRÕES -->
 <div class="patterns-section">
@@ -965,6 +968,13 @@
         }
       }
     });
+  }
+
+  function toggleInsightsBody(btn) {
+    const body = document.getElementById('insightsBody');
+    const open = body.style.display === 'none' || body.style.display === '';
+    body.style.display = open ? 'block' : 'none';
+    btn.textContent = open ? 'Ocultar leituras ▴' : 'Ver leituras ▾';
   }
 
   function togglePatternsBody(btn) {
