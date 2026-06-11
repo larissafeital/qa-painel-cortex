@@ -175,37 +175,6 @@
     .t-onboarding { background: var(--brand-purple-light); color: var(--brand-purple); }
     .t-ongoing    { background: var(--brand-wine-light);   color: var(--brand-wine); }
 
-    /* ── INSIGHTS ── */
-    .insights-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 20px;
-    }
-    .insight {
-      background: white;
-      border-radius: 14px;
-      padding: 20px 22px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
-      border-left: 4px solid var(--nps-promotor);
-    }
-    .insight.warn  { border-left-color: var(--nps-detrator); }
-    .insight.info  { border-left-color: var(--brand-purple); grid-column: 1 / -1; }
-    .insight-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
-    .insight ul { list-style: none; font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
-    .insight ul li { padding-left: 14px; position: relative; }
-    .insight ul li::before { content: '›'; position: absolute; left: 0; color: var(--text-placeholder); font-weight: 700; }
-    .insight.info ul { columns: 2; column-gap: 28px; }
-    .expand-btn { margin-top: 10px; background: none; border: 1px solid var(--nps-detrator); color: var(--nps-detrator); border-radius: 6px; padding: 4px 12px; font-size: 12px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
-    .expand-btn:hover { background: var(--nps-detrator-bg); }
-    .expand-btn.open { }
-    .expand-content { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--nps-detrator-bg); }
-    .expand-content.open { display: block; }
-    .expand-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 6px; }
-    .expand-content ul { list-style: none; font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
-    .expand-content ul li { padding-left: 14px; position: relative; }
-    .expand-content ul li::before { content: '›'; position: absolute; left: 0; color: var(--text-placeholder); font-weight: 700; }
-
     /* ── PADRÕES ── */
     .patterns-section {
       background: white;
@@ -219,6 +188,8 @@
     .patterns-body.active { display: block; }
     .patterns-toggle { background: none; border: 1px solid var(--text-subtle); color: var(--text-muted); border-radius: 6px; padding: 4px 12px; font-size: 12px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
     .patterns-toggle:hover { background: var(--bg-page); }
+    .btn-expand { background: var(--brand-purple); color: #fff; border: none; border-radius: 20px; padding: 6px 16px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: background 0.15s, transform 0.1s; box-shadow: 0 2px 6px rgba(139,45,191,0.25); }
+    .btn-expand:hover { background: #7a22ab; transform: scale(1.03); }
 
     /* visão visual */
     .patterns-visual { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -376,7 +347,7 @@
 <!-- VOZ DO CLIENTE -->
 <div class="voz-header" style="display:flex;align-items:center;justify-content:space-between;">
   <div class="voz-title">Voz do Cliente</div>
-  <button class="patterns-toggle" onclick="toggleAllVoz(this)">Ver mais ▾</button>
+  <button class="btn-expand" onclick="toggleAllVoz(this)">Ver mais ▾</button>
 </div>
 
 <div class="voz-grid">
@@ -541,139 +512,16 @@
   </table>
 </div>
 
-<!-- INSIGHTS -->
-<div class="voz-header" style="display:flex;align-items:center;justify-content:space-between;">
-  <div class="voz-title">Leituras do QA</div>
-  <button class="patterns-toggle" onclick="toggleInsightsBody(this)">Ver leituras ▾</button>
-</div>
-<div id="insightsBody" style="display:none;">
-<div class="insights-row">
-  <div class="insight">
-    <div class="insight-title" style="color:var(--nps-promotor);">✓ O que está funcionando</div>
-    <ul>
-      <li>Atendimento humano é o principal driver de nota 10</li>
-      <li>Volvo: implantação em ~8 semanas mesmo com início imediato</li>
-      <li>BHP: processo de 2 meses visto como cuidadoso e personalizado</li>
-      <li>Equipe Cortex citada nominalmente nos dois casos de sucesso</li>
-    </ul>
-    <button class="expand-btn" data-label="Ver relato dos clientes" style="border-color:var(--nps-promotor);color:var(--nps-promotor);" onclick="toggleExpand(this)">Ver relato dos clientes ▾</button>
-    <div class="expand-content" style="border-top-color:var(--nps-promotor-bg);">
-      <p class="expand-label">Nas palavras de Volvo:</p>
-      <ul>
-        <li>"O atendimento da equipe foi impecável — senti que tinham um cuidado real com o nosso projeto, não era só mais uma entrega."</li>
-        <li>"A métrica de valoração ainda precisa de ajuste, mas o processo de onboarding em si foi bem conduzido e dentro do prazo esperado."</li>
-      </ul>
-      <p class="expand-label" style="margin-top:10px;">Nas palavras de Ricardo Gioia · BHP:</p>
-      <ul>
-        <li>"Preferimos dois meses de implantação cuidadosa a receber uma solução pronta, sem personalização — esse tempo foi necessário para garantir resultados relevantes."</li>
-        <li>"A paciência e receptividade da equipe frente às nossas mudanças internas constantes foi fundamental para o sucesso do projeto."</li>
-      </ul>
-    </div>
-  </div>
-  <div class="insight warn">
-    <div class="insight-title" style="color:var(--nps-detrator);">⚠ Unilever Foods — Atenção</div>
-    <ul>
-      <li>Classificação da marca Hellmann's não assertiva — prejudica monitoramento de concorrentes e antecipação de crises</li>
-      <li>Agendas de insights sem valor agregado: cliente espera ângulos novos e proatividade analítica, não apenas reportagem do que já gerencia</li>
-      <li>Projeto ainda em fase de integração — objetivos iniciais do contrato não foram totalmente atingidos</li>
-    </ul>
-    <button class="expand-btn" onclick="toggleExpand(this)">Ver relato da cliente ▾</button>
-    <div class="expand-content">
-      <p class="expand-label">Nas palavras de Jacqueline Martins · Unilever Foods:</p>
-      <ul>
-        <li>"A classificação para a Hellmann's não estava assertiva, prejudicando o monitoramento de concorrentes e a antecipação de crises."</li>
-        <li>"As agendas de insights carecem de valor agregado — precisamos que a Cortex traga novos ângulos ou refinamentos de processo, em vez de apenas reportar o que já aconteceu."</li>
-      </ul>
-    </div>
-  </div>
-  <div class="insight warn">
-    <div class="insight-title" style="color:var(--nps-detrator);">⚠ Tramontina — Atenção</div>
-    <ul>
-      <li>Falha na captação de dados, inconsistências no Clipping e expectativa quebrada sobre o escopo contratado</li>
-      <li>Escopo não alinhado: TV/rádio e revisão manual não estavam no contrato, mas eram esperados</li>
-      <li>Sugestão: Explicação melhor dos painéis e escopo na pré-venda eliminaria 90-100% dos ruídos</li>
-    </ul>
-    <button class="expand-btn" onclick="toggleExpand(this)">Ver relato do cliente ▾</button>
-    <div class="expand-content">
-      <p class="expand-label">Nas palavras de Marcelo Torri · FTcom (Tramontina):</p>
-      <ul>
-        <li>"A expectativa era ter revisão manual de classificações e cobertura de TV e rádio — nenhuma das duas estava no contrato. Só ficou claro depois de assinar."</li>
-        <li>"Uma imersão na plataforma antes de fechar o contrato teria eliminado 90% dos ruídos — a gente teria entendido exatamente o que estava contratando."</li>
-      </ul>
-    </div>
-  </div>
-</div>
-</div><!-- /insightsBody -->
 
 <!-- PADRÕES -->
 <div class="patterns-section">
   <div class="patterns-header">
-    <h2 class="section-title" style="margin-bottom:0;">Padrões de Resposta</h2>
-    <div style="display:flex;gap:8px;">
-      <button class="patterns-toggle" onclick="togglePatternsView(this)" id="btnPatternsView" style="display:none;">Ver em texto ▾</button>
-      <button class="patterns-toggle" onclick="togglePatternsBody(this)">Ver padrões ▾</button>
-    </div>
+    <div class="voz-title">Padrões de Resposta</div>
+    <button class="patterns-toggle" onclick="togglePatternsBody(this)">Ver padrões ▾</button>
   </div>
 
-  <div class="patterns-body" id="patternsBody">
-  <!-- visão visual (padrão) -->
-  <div class="patterns-visual" id="patternsVisual">
-    <div class="pv-col manter">
-      <div class="pv-header">
-        <span class="pv-icon">↑</span>
-        <span class="pv-title">Manter</span>
-      </div>
-      <div class="pv-items">
-        <div class="pv-item">
-          <div class="pv-item-label">Atendimento</div>
-          <div class="pv-item-desc">Equipe nomeada e paciência frente a mudanças internas foram decisivos</div>
-        </div>
-        <div class="pv-item">
-          <div class="pv-item-label">Implantação</div>
-          <div class="pv-item-desc">Personalização e cuidado no processo foram percebidos como diferencial</div>
-        </div>
-        <div class="pv-item">
-          <div class="pv-item-label">Curadoria de Veículos</div>
-          <div class="pv-item-desc">Clipping focado em veículos relevantes é percebido como entrega mais executiva — diferencial claro frente a clipadoras tradicionais</div>
-        </div>
-      </div>
-    </div>
-    <div class="pv-col desenvolver">
-      <div class="pv-header">
-        <span class="pv-icon">→</span>
-        <span class="pv-title">Desenvolver</span>
-      </div>
-      <div class="pv-items">
-        <div class="pv-item">
-          <div class="pv-item-label">Pré-venda</div>
-          <div class="pv-item-desc">Expectativa quebrada por escopo não alinhado antes da assinatura</div>
-        </div>
-        <div class="pv-item">
-          <div class="pv-item-label">Metodologia de Valoração</div>
-          <div class="pv-item-desc">Difícil de entender no primeiro momento — workshop resolveu na Volvo, ainda aberto na BHP</div>
-        </div>
-        <div class="pv-item">
-          <div class="pv-item-label">Insights e Proatividade</div>
-          <div class="pv-item-desc">Agendas que só reportam resultados conhecidos não são percebidas como valor</div>
-        </div>
-        <div class="pv-item">
-          <div class="pv-item-label">Processos Internos / Tickets</div>
-          <div class="pv-item-desc">Demora no suporte e falta de clareza no processo de ajuste geram frustração no início</div>
-        </div>
-        <div class="pv-item">
-          <div class="pv-item-label">Adoção da Metodologia</div>
-          <div class="pv-item-desc">Sem estrutura de adoção, o cliente usa a plataforma abaixo do potencial</div>
-        </div>
-        <div class="pv-item">
-          <div class="pv-item-label">Alinhamento com Stakeholders Seniores</div>
-          <div class="pv-item-desc">Incluir agendas de validação para líderes além da Champion reduz risco de percepção de baixo valor estratégico</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- visão texto -->
-  <div class="patterns-grid" id="patternsText">
+  <!-- 2 cards pré-visíveis de cada cor -->
+  <div class="patterns-grid active" style="margin-top:16px;">
     <div class="pattern-card manter">
       <div class="pattern-tag">Atendimento</div>
       <div class="pattern-context">Volvo citou a equipe diretamente; BHP destacou a paciência frente às mudanças internas como fator decisivo; Unilever avaliou positivamente o atendimento CS e a plataforma.</div>
@@ -690,27 +538,54 @@
       <div class="pattern-tag">Metodologia de Valoração</div>
       <div class="pattern-context">Apareceu como ponto negativo na Volvo e na BHP — na Volvo foi resolvido via workshop; na BHP ainda está em aberto.</div>
     </div>
-    <div class="pattern-card manter">
-      <div class="pattern-tag">Curadoria de Veículos</div>
-      <div class="pattern-context">Volvo valorizou o foco em veículos relevantes em detrimento de volume bruto — a curadoria executiva é percebida como diferencial claro frente a clipadoras tradicionais.</div>
-    </div>
-    <div class="pattern-card desenvolver">
-      <div class="pattern-tag">Insights e Proatividade</div>
-      <div class="pattern-context">Unilever solicitou que a Cortex atue com mais protagonismo analítico — agendas que apenas reportam resultados já conhecidos pelo cliente não são percebidas como valor.</div>
-    </div>
-    <div class="pattern-card desenvolver">
-      <div class="pattern-tag">Processos Internos / Tickets</div>
-      <div class="pattern-context">Tramontina relatou demora nas respostas de suporte e falta de clareza no processo de ajuste de classificação — sem passo a passo claro, o cliente fica sem saber como resolver problemas operacionais.</div>
-    </div>
-    <div class="pattern-card desenvolver">
-      <div class="pattern-tag">Adoção da Metodologia</div>
-      <div class="pattern-context">BHP reconheceu dificuldade em internalizar o NPS e as rotinas da plataforma no dia a dia — o cliente usa a ferramenta abaixo do potencial sem uma estrutura de adoção planejada.</div>
-    </div>
-    <div class="pattern-card desenvolver">
-      <div class="pattern-tag">Alinhamento com Stakeholders Seniores</div>
-      <div class="pattern-context">Unilever identificou necessidade de agendas de validação para líderes acima da Champion — incluir esse nível no onboarding reduz o risco de percepção de baixo valor estratégico.</div>
-    </div>
   </div>
+
+  <!-- demais padrões + visão visual — ocultos por padrão -->
+  <div class="patterns-body" id="patternsBody">
+    <div class="patterns-grid active" style="margin-top:12px;">
+      <div class="pattern-card manter">
+        <div class="pattern-tag">Curadoria de Veículos</div>
+        <div class="pattern-context">Volvo valorizou o foco em veículos relevantes em detrimento de volume bruto — a curadoria executiva é percebida como diferencial claro frente a clipadoras tradicionais.</div>
+      </div>
+      <div class="pattern-card desenvolver">
+        <div class="pattern-tag">Insights e Proatividade</div>
+        <div class="pattern-context">Unilever solicitou que a Cortex atue com mais protagonismo analítico — agendas que apenas reportam resultados já conhecidos pelo cliente não são percebidas como valor.</div>
+      </div>
+      <div class="pattern-card desenvolver">
+        <div class="pattern-tag">Processos Internos / Tickets</div>
+        <div class="pattern-context">Tramontina relatou demora nas respostas de suporte e falta de clareza no processo de ajuste de classificação — sem passo a passo claro, o cliente fica sem saber como resolver problemas operacionais.</div>
+      </div>
+      <div class="pattern-card desenvolver">
+        <div class="pattern-tag">Adoção da Metodologia</div>
+        <div class="pattern-context">BHP reconheceu dificuldade em internalizar o NPS e as rotinas da plataforma no dia a dia — o cliente usa a ferramenta abaixo do potencial sem uma estrutura de adoção planejada.</div>
+      </div>
+      <div class="pattern-card desenvolver">
+        <div class="pattern-tag">Alinhamento com Stakeholders Seniores</div>
+        <div class="pattern-context">Unilever identificou necessidade de agendas de validação para líderes acima da Champion — incluir esse nível no onboarding reduz o risco de percepção de baixo valor estratégico.</div>
+      </div>
+    </div>
+
+    <div class="patterns-visual" id="patternsVisual" style="margin-top:16px;">
+      <div class="pv-col manter">
+        <div class="pv-header"><span class="pv-icon">↑</span><span class="pv-title">Manter</span></div>
+        <div class="pv-items">
+          <div class="pv-item"><div class="pv-item-label">Atendimento</div><div class="pv-item-desc">Equipe nomeada e paciência frente a mudanças internas foram decisivos</div></div>
+          <div class="pv-item"><div class="pv-item-label">Implantação</div><div class="pv-item-desc">Personalização e cuidado no processo foram percebidos como diferencial</div></div>
+          <div class="pv-item"><div class="pv-item-label">Curadoria de Veículos</div><div class="pv-item-desc">Clipping focado em veículos relevantes é percebido como entrega mais executiva</div></div>
+        </div>
+      </div>
+      <div class="pv-col desenvolver">
+        <div class="pv-header"><span class="pv-icon">→</span><span class="pv-title">Desenvolver</span></div>
+        <div class="pv-items">
+          <div class="pv-item"><div class="pv-item-label">Pré-venda</div><div class="pv-item-desc">Expectativa quebrada por escopo não alinhado antes da assinatura</div></div>
+          <div class="pv-item"><div class="pv-item-label">Metodologia de Valoração</div><div class="pv-item-desc">Difícil de entender no primeiro momento</div></div>
+          <div class="pv-item"><div class="pv-item-label">Insights e Proatividade</div><div class="pv-item-desc">Agendas que só reportam resultados conhecidos não são percebidas como valor</div></div>
+          <div class="pv-item"><div class="pv-item-label">Processos Internos / Tickets</div><div class="pv-item-desc">Demora no suporte e falta de clareza no processo de ajuste geram frustração</div></div>
+          <div class="pv-item"><div class="pv-item-label">Adoção da Metodologia</div><div class="pv-item-desc">Sem estrutura de adoção, o cliente usa a plataforma abaixo do potencial</div></div>
+          <div class="pv-item"><div class="pv-item-label">Alinhamento com Stakeholders Seniores</div><div class="pv-item-desc">Incluir agendas de validação para líderes além da Champion reduz risco de baixo valor percebido</div></div>
+        </div>
+      </div>
+    </div>
   </div><!-- /patterns-body -->
 </div>
 
@@ -1004,12 +879,6 @@
     btn.textContent = open ? 'Ver menos ▴' : 'Ver mais ▾';
   }
 
-  function toggleInsightsBody(btn) {
-    const body = document.getElementById('insightsBody');
-    const open = body.style.display === 'none' || body.style.display === '';
-    body.style.display = open ? 'block' : 'none';
-    btn.textContent = open ? 'Ocultar leituras ▴' : 'Ver leituras ▾';
-  }
 
   function togglePatternsBody(btn) {
     const body    = document.getElementById('patternsBody');
