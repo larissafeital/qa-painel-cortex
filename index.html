@@ -669,8 +669,8 @@
     });
     if (lastDate) {
       const [y, m, d] = lastDate.split('-');
-      document.getElementById('statUltimoQA').textContent = `${d}/${m}/${y}`;
-      document.getElementById('statUltimoCliente').textContent = lastClient;
+      document.getElementById('statUltimoQA').textContent = lastClient;
+      document.getElementById('statUltimoCliente').textContent = `${d}/${m}/${y}`;
     }
     const pairs = CLIENTS
       .map((c, i) => ({ c, v: DATA_ONBOARD[i] }))
