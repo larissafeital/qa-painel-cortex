@@ -79,6 +79,11 @@
     }
     .card-value { font-size: 42px; font-weight: 800; margin-top: 6px; line-height: 1; }
     .card-sub { font-size: 12px; color: var(--text-placeholder); margin-top: 6px; }
+    .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; margin-top: -12px; }
+    .stat-card { background: white; border-radius: 10px; padding: 14px 18px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); display: flex; flex-direction: column; gap: 3px; }
+    .stat-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-placeholder); }
+    .stat-value { font-size: 16px; font-weight: 800; color: var(--text-primary); margin-top: 2px; }
+    .stat-sub   { font-size: 11px; color: var(--text-muted); }
     .val-green  { color: var(--nps-promotor); }
     .val-yellow { color: #2E8FB5; }
     .val-red    { color: var(--nps-detrator); }
@@ -320,6 +325,25 @@
     <div class="card-label">Média Impacto no Negócio</div>
     <div class="card-value val-yellow" id="cardImpactoValue">8,8</div>
     <div class="card-prev" id="prevImpacto"></div>
+  </div>
+</div>
+
+<!-- STATS SECUNDÁRIOS -->
+<div class="stat-row">
+  <div class="stat-card">
+    <div class="stat-label">Último QA realizado</div>
+    <div class="stat-value" id="statUltimoQA">—</div>
+    <div class="stat-sub"   id="statUltimoCliente">—</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">QA com maior nota de Onboarding</div>
+    <div class="stat-value" id="statMaiorNome">—</div>
+    <div class="stat-sub"   id="statMaiorNota">—</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">QA com menor nota de Onboarding</div>
+    <div class="stat-value" id="statMenorNome">—</div>
+    <div class="stat-sub"   id="statMenorNota">—</div>
   </div>
 </div>
 
@@ -632,6 +656,33 @@
       const cls = diff > 0.05 ? 'prev-up' : diff < -0.05 ? 'prev-down' : '';
       el.innerHTML = `<span class="${cls}">${arrow} ${prevStr} anterior</span>`;
     });
+  })();
+
+  // ── stats secundários (último QA, maior/menor onboarding) ───────────
+  (function () {
+    let lastDate = '', lastClient = '';
+    CLIENTS.forEach(c => {
+      const h = HISTORICO[c];
+      if (!h || !h.length) return;
+      const d = h[h.length - 1].data;
+      if (d > lastDate) { lastDate = d; lastClient = c; }
+    });
+    if (lastDate) {
+      const [y, m, d] = lastDate.split('-');
+      document.getElementById('statUltimoQA').textContent = `${d}/${m}/${y}`;
+      document.getElementById('statUltimoCliente').textContent = lastClient;
+    }
+    const pairs = CLIENTS
+      .map((c, i) => ({ c, v: DATA_ONBOARD[i] }))
+      .filter(p => p.v !== null && p.v !== undefined);
+    if (pairs.length) {
+      const maior = pairs.reduce((a, b) => a.v >= b.v ? a : b);
+      const menor = pairs.reduce((a, b) => a.v <= b.v ? a : b);
+      document.getElementById('statMaiorNome').textContent = maior.c;
+      document.getElementById('statMaiorNota').textContent = `Onboarding ${maior.v}`;
+      document.getElementById('statMenorNome').textContent = menor.c;
+      document.getElementById('statMenorNota').textContent = `Onboarding ${menor.v}`;
+    }
   })();
 
   // ── helper: ordena dois arrays paralelos por valor decrescente ───────
