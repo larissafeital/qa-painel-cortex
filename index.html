@@ -214,37 +214,39 @@
       box-shadow: 0 1px 4px rgba(0,0,0,0.07);
       margin-bottom: 20px;
     }
-    .patterns-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .patterns-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0; }
+    .patterns-body { display: none; margin-top: 20px; }
+    .patterns-body.active { display: block; }
     .patterns-toggle { background: none; border: 1px solid var(--text-subtle); color: var(--text-muted); border-radius: 6px; padding: 4px 12px; font-size: 12px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
     .patterns-toggle:hover { background: var(--bg-page); }
 
     /* visão visual */
     .patterns-visual { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .pv-col { border-radius: 12px; padding: 18px 20px; }
-    .pv-col.recua  { background: var(--brand-orange-light); border-top: 3px solid var(--brand-orange); }
-    .pv-col.nao-recua { background: var(--brand-purple-light); border-top: 3px solid var(--brand-purple); }
+    .pv-col.manter     { background: var(--brand-purple-light); border-top: 3px solid var(--brand-purple); }
+    .pv-col.desenvolver { background: rgba(30,120,190,0.08); border-top: 3px solid #1E78BE; }
     .pv-header { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
     .pv-icon { font-size: 18px; line-height: 1; }
     .pv-title { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.7px; }
-    .pv-col.recua .pv-title { color: var(--brand-orange-dark); }
-    .pv-col.nao-recua .pv-title { color: var(--brand-purple); }
+    .pv-col.manter .pv-title      { color: var(--brand-purple); }
+    .pv-col.desenvolver .pv-title  { color: #1E78BE; }
     .pv-items { display: flex; flex-direction: column; gap: 8px; }
     .pv-item { border-radius: 8px; padding: 10px 14px; }
-    .pv-col.recua .pv-item  { background: rgba(245,160,32,0.15); }
-    .pv-col.nao-recua .pv-item { background: rgba(139,45,191,0.10); }
+    .pv-col.manter .pv-item      { background: rgba(139,45,191,0.10); }
+    .pv-col.desenvolver .pv-item  { background: rgba(30,120,190,0.10); }
     .pv-item-label { font-size: 12px; font-weight: 700; margin-bottom: 2px; }
-    .pv-col.recua .pv-item-label  { color: var(--brand-orange-dark); }
-    .pv-col.nao-recua .pv-item-label { color: var(--brand-purple); }
+    .pv-col.manter .pv-item-label      { color: var(--brand-purple); }
+    .pv-col.desenvolver .pv-item-label  { color: #1E78BE; }
     .pv-item-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
 
     /* visão texto */
     .patterns-grid { display: none; grid-template-columns: 1fr 1fr; gap: 12px; }
     .patterns-grid.active { display: grid; }
     .pattern-card { border-radius: 10px; padding: 16px 18px; display: flex; flex-direction: column; gap: 6px; }
-    .pattern-card.elogio { background: var(--brand-purple-light); border-left: 3px solid var(--brand-purple); }
-    .pattern-card.elogio .pattern-tag { color: var(--brand-purple); }
-    .pattern-card.critica { background: var(--brand-orange-light); border-left: 3px solid var(--brand-orange); }
-    .pattern-card.critica .pattern-tag { color: var(--brand-orange-dark); }
+    .pattern-card.manter { background: var(--brand-purple-light); border-left: 3px solid var(--brand-purple); }
+    .pattern-card.manter .pattern-tag { color: var(--brand-purple); }
+    .pattern-card.desenvolver { background: rgba(30,120,190,0.08); border-left: 3px solid #1E78BE; }
+    .pattern-card.desenvolver .pattern-tag { color: #1E78BE; }
     .pattern-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px; }
     .pattern-context { font-size: 12px; color: var(--text-muted); line-height: 1.55; }
 
@@ -577,43 +579,19 @@
 <div class="patterns-section">
   <div class="patterns-header">
     <h2 class="section-title" style="margin-bottom:0;">Padrões de Resposta</h2>
-    <button class="patterns-toggle" onclick="togglePatterns(this)">Ver em texto ▾</button>
+    <div style="display:flex;gap:8px;">
+      <button class="patterns-toggle" onclick="togglePatternsView(this)" id="btnPatternsView" style="display:none;">Ver em texto ▾</button>
+      <button class="patterns-toggle" onclick="togglePatternsBody(this)">Ver padrões ▾</button>
+    </div>
   </div>
 
+  <div class="patterns-body" id="patternsBody">
   <!-- visão visual (padrão) -->
   <div class="patterns-visual" id="patternsVisual">
-    <div class="pv-col recua">
-      <div class="pv-header">
-        <span class="pv-icon">↓</span>
-        <span class="pv-title">Recua o NPS de Onboarding</span>
-      </div>
-      <div class="pv-items">
-        <div class="pv-item">
-          <div class="pv-item-label">Pré-venda</div>
-          <div class="pv-item-desc">Expectativa quebrada por escopo não alinhado antes da assinatura</div>
-        </div>
-        <div class="pv-item">
-          <div class="pv-item-label">Metodologia de Valoração</div>
-          <div class="pv-item-desc">Difícil de entender no primeiro momento</div>
-        </div>
-        <div class="pv-item">
-          <div class="pv-item-label">Insights e Proatividade</div>
-          <div class="pv-item-desc">Agendas que só reportam resultados conhecidos não são percebidas como valor pelo cliente</div>
-        </div>
-        <div class="pv-item">
-          <div class="pv-item-label">Processos Internos / Tickets</div>
-          <div class="pv-item-desc">Demora no suporte e falta de clareza no processo de ajuste de classificação geram frustração no início</div>
-        </div>
-        <div class="pv-item">
-          <div class="pv-item-label">Adoção da Metodologia</div>
-          <div class="pv-item-desc">Internalizar NPS e novos dados nas rotinas é um desafio real — sem estrutura de adoção, o cliente usa a plataforma abaixo do potencial</div>
-        </div>
-      </div>
-    </div>
-    <div class="pv-col nao-recua">
+    <div class="pv-col manter">
       <div class="pv-header">
         <span class="pv-icon">↑</span>
-        <span class="pv-title">Sustenta o NPS de Onboarding</span>
+        <span class="pv-title">Manter</span>
       </div>
       <div class="pv-items">
         <div class="pv-item">
@@ -625,12 +603,40 @@
           <div class="pv-item-desc">Personalização e cuidado no processo foram percebidos como diferencial</div>
         </div>
         <div class="pv-item">
-          <div class="pv-item-label">Alinhamento com Stakeholders Seniores</div>
-          <div class="pv-item-desc">Incluir agendas de validação para líderes seniores, além das operacionais com a Champion, reduz risco de percepção de baixo valor no nível estratégico</div>
-        </div>
-        <div class="pv-item">
           <div class="pv-item-label">Curadoria de Veículos</div>
           <div class="pv-item-desc">Clipping focado em veículos relevantes é percebido como entrega mais executiva — diferencial claro frente a clipadoras tradicionais</div>
+        </div>
+      </div>
+    </div>
+    <div class="pv-col desenvolver">
+      <div class="pv-header">
+        <span class="pv-icon">→</span>
+        <span class="pv-title">Desenvolver</span>
+      </div>
+      <div class="pv-items">
+        <div class="pv-item">
+          <div class="pv-item-label">Pré-venda</div>
+          <div class="pv-item-desc">Expectativa quebrada por escopo não alinhado antes da assinatura</div>
+        </div>
+        <div class="pv-item">
+          <div class="pv-item-label">Metodologia de Valoração</div>
+          <div class="pv-item-desc">Difícil de entender no primeiro momento — workshop resolveu na Volvo, ainda aberto na BHP</div>
+        </div>
+        <div class="pv-item">
+          <div class="pv-item-label">Insights e Proatividade</div>
+          <div class="pv-item-desc">Agendas que só reportam resultados conhecidos não são percebidas como valor</div>
+        </div>
+        <div class="pv-item">
+          <div class="pv-item-label">Processos Internos / Tickets</div>
+          <div class="pv-item-desc">Demora no suporte e falta de clareza no processo de ajuste geram frustração no início</div>
+        </div>
+        <div class="pv-item">
+          <div class="pv-item-label">Adoção da Metodologia</div>
+          <div class="pv-item-desc">Sem estrutura de adoção, o cliente usa a plataforma abaixo do potencial</div>
+        </div>
+        <div class="pv-item">
+          <div class="pv-item-label">Alinhamento com Stakeholders Seniores</div>
+          <div class="pv-item-desc">Incluir agendas de validação para líderes além da Champion reduz risco de percepção de baixo valor estratégico</div>
         </div>
       </div>
     </div>
@@ -638,43 +644,44 @@
 
   <!-- visão texto -->
   <div class="patterns-grid" id="patternsText">
-    <div class="pattern-card critica">
-      <div class="pattern-tag">Pré-venda</div>
-      <div class="pattern-context">Tramontina não sabia que revisão manual e cobertura de TV/rádio estavam fora do contrato — a expectativa quebrou no onboarding.</div>
-    </div>
-    <div class="pattern-card elogio">
+    <div class="pattern-card manter">
       <div class="pattern-tag">Atendimento</div>
       <div class="pattern-context">Volvo citou a equipe diretamente; BHP destacou a paciência frente às mudanças internas como fator decisivo; Unilever avaliou positivamente o atendimento CS e a plataforma.</div>
     </div>
-    <div class="pattern-card critica">
-      <div class="pattern-tag">Metodologia de Valoração</div>
-      <div class="pattern-context">Apareceu como ponto negativo na Volvo e na BHP — na Volvo foi resolvido via workshop; na BHP ainda está em aberto.</div>
+    <div class="pattern-card desenvolver">
+      <div class="pattern-tag">Pré-venda</div>
+      <div class="pattern-context">Tramontina não sabia que revisão manual e cobertura de TV/rádio estavam fora do contrato — a expectativa quebrou no onboarding.</div>
     </div>
-    <div class="pattern-card elogio">
+    <div class="pattern-card manter">
       <div class="pattern-tag">Implantação</div>
       <div class="pattern-context">BHP destacou a personalização do processo; Volvo valorizou o tempo dedicado e o cuidado na condução da implantação.</div>
     </div>
-    <div class="pattern-card critica">
-      <div class="pattern-tag">Insights e Proatividade</div>
-      <div class="pattern-context">Unilever solicitou que a Cortex atue com mais protagonismo analítico — agendas que apenas reportam resultados já conhecidos pelo cliente não são percebidas como valor.</div>
+    <div class="pattern-card desenvolver">
+      <div class="pattern-tag">Metodologia de Valoração</div>
+      <div class="pattern-context">Apareceu como ponto negativo na Volvo e na BHP — na Volvo foi resolvido via workshop; na BHP ainda está em aberto.</div>
     </div>
-    <div class="pattern-card critica">
-      <div class="pattern-tag">Processos Internos / Tickets</div>
-      <div class="pattern-context">Tramontina relatou demora nas respostas de suporte e falta de clareza no processo de ajuste de classificação — sem passo a passo claro, o cliente fica sem saber como resolver problemas operacionais.</div>
-    </div>
-    <div class="pattern-card critica">
-      <div class="pattern-tag">Adoção da Metodologia</div>
-      <div class="pattern-context">BHP reconheceu dificuldade em internalizar o NPS e as rotinas da plataforma no dia a dia — o cliente usa a ferramenta abaixo do potencial sem uma estrutura de adoção planejada.</div>
-    </div>
-    <div class="pattern-card elogio">
-      <div class="pattern-tag">Alinhamento com Stakeholders Seniores</div>
-      <div class="pattern-context">Unilever identificou necessidade de agendas de validação para líderes acima da Champion — incluir esse nível no onboarding reduz o risco de percepção de baixo valor estratégico.</div>
-    </div>
-    <div class="pattern-card elogio">
+    <div class="pattern-card manter">
       <div class="pattern-tag">Curadoria de Veículos</div>
       <div class="pattern-context">Volvo valorizou o foco em veículos relevantes em detrimento de volume bruto — a curadoria executiva é percebida como diferencial claro frente a clipadoras tradicionais.</div>
     </div>
+    <div class="pattern-card desenvolver">
+      <div class="pattern-tag">Insights e Proatividade</div>
+      <div class="pattern-context">Unilever solicitou que a Cortex atue com mais protagonismo analítico — agendas que apenas reportam resultados já conhecidos pelo cliente não são percebidas como valor.</div>
+    </div>
+    <div class="pattern-card desenvolver">
+      <div class="pattern-tag">Processos Internos / Tickets</div>
+      <div class="pattern-context">Tramontina relatou demora nas respostas de suporte e falta de clareza no processo de ajuste de classificação — sem passo a passo claro, o cliente fica sem saber como resolver problemas operacionais.</div>
+    </div>
+    <div class="pattern-card desenvolver">
+      <div class="pattern-tag">Adoção da Metodologia</div>
+      <div class="pattern-context">BHP reconheceu dificuldade em internalizar o NPS e as rotinas da plataforma no dia a dia — o cliente usa a ferramenta abaixo do potencial sem uma estrutura de adoção planejada.</div>
+    </div>
+    <div class="pattern-card desenvolver">
+      <div class="pattern-tag">Alinhamento com Stakeholders Seniores</div>
+      <div class="pattern-context">Unilever identificou necessidade de agendas de validação para líderes acima da Champion — incluir esse nível no onboarding reduz o risco de percepção de baixo valor estratégico.</div>
+    </div>
   </div>
+  </div><!-- /patterns-body -->
 </div>
 
 <footer>Painel vivo — envie novos PDFs de QA para atualização &nbsp;·&nbsp; Cortex Intelligence · Brand Onboarding</footer>
@@ -960,7 +967,15 @@
     });
   }
 
-  function togglePatterns(btn) {
+  function togglePatternsBody(btn) {
+    const body    = document.getElementById('patternsBody');
+    const viewBtn = document.getElementById('btnPatternsView');
+    const open = body.classList.toggle('active');
+    btn.textContent = open ? 'Ocultar padrões ▴' : 'Ver padrões ▾';
+    viewBtn.style.display = open ? '' : 'none';
+  }
+
+  function togglePatternsView(btn) {
     const visual = document.getElementById('patternsVisual');
     const text   = document.getElementById('patternsText');
     const showingText = text.classList.contains('active');
