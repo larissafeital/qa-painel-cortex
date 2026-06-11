@@ -82,6 +82,16 @@
     .val-green  { color: var(--nps-promotor); }
     .val-yellow { color: #2E8FB5; }
     .val-red    { color: var(--nps-detrator); }
+    .card-prev  { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+    .card-prev .prev-up   { color: var(--nps-promotor); font-weight: 600; }
+    .card-prev .prev-down { color: var(--nps-detrator);  font-weight: 600; }
+    .card.highlight-green .card-prev,
+    .card.highlight-red   .card-prev { color: rgba(255,255,255,0.65); }
+    .card.highlight-green .card-prev .prev-up,
+    .card.highlight-green .card-prev .prev-down,
+    .card.highlight-red   .card-prev .prev-up,
+    .card.highlight-red   .card-prev .prev-down { color: inherit; font-weight: 700; }
+    .card.highlight-yellow .card-prev { color: rgba(0,60,90,0.6); }
     .card.highlight-green {
       background: var(--nps-promotor);
       box-shadow: 0 2px 12px rgba(0,77,58,0.25);
@@ -315,14 +325,17 @@
   <div class="card" id="cardOnboarding">
     <div class="card-label">Média Onboarding</div>
     <div class="card-value" id="cardOnboardingValue">8,5</div>
+    <div class="card-prev" id="prevOnboarding"></div>
   </div>
-  <div class="card">
+  <div class="card" id="cardNPS">
     <div class="card-label">Média NPS</div>
-    <div class="card-value val-yellow">8,5</div>
+    <div class="card-value val-yellow" id="cardNPSValue">8,5</div>
+    <div class="card-prev" id="prevNPS"></div>
   </div>
-  <div class="card">
+  <div class="card" id="cardImpacto">
     <div class="card-label">Média Impacto no Negócio</div>
-    <div class="card-value val-yellow">8,8</div>
+    <div class="card-value val-yellow" id="cardImpactoValue">8,8</div>
+    <div class="card-prev" id="prevImpacto"></div>
   </div>
 </div>
 
@@ -345,9 +358,8 @@
 </div>
 
 <!-- VOZ DO CLIENTE -->
-<div class="voz-header" style="display:flex;align-items:center;justify-content:space-between;">
+<div class="voz-header">
   <div class="voz-title">Voz do Cliente</div>
-  <button class="btn-expand" onclick="toggleAllVoz(this)">Ver mais ▾</button>
 </div>
 
 <div class="voz-grid">
@@ -357,7 +369,7 @@
     <ul class="voz-bullets">
       <li>"O atendimento é de uma agilidade maravilhosa — a proatividade em questionar sobre o clipping em feriados demonstra um cuidado que a gente não tinha antes."</li>
     </ul>
-    <div class="expand-content voz-extra">
+    <div class="voz-extra">
       <ul class="voz-bullets" style="margin:0;">
         <li>"Tivemos um desconforto inicial com a metodologia de valoração, por ser bem diferente das clipadoras tradicionais — mas resolvemos isso com um workshop e ficou claro o valor da abordagem."</li>
       </ul>
@@ -370,7 +382,7 @@
     <ul class="voz-bullets">
       <li>"Preferimos dois meses de implantação cuidadosa a receber uma solução pronta, sem personalização — esse tempo foi necessário para garantir resultados relevantes."</li>
     </ul>
-    <div class="expand-content voz-extra">
+    <div class="voz-extra">
       <ul class="voz-bullets" style="margin:0;">
         <li>"A paciência e receptividade da equipe frente às nossas mudanças internas constantes foi fundamental para o sucesso do projeto."</li>
       </ul>
@@ -383,7 +395,7 @@
     <ul class="voz-bullets">
       <li>"A expectativa era ter revisão manual de classificações e cobertura de TV e rádio — nenhuma das duas estava no contrato. Só ficou claro depois de assinar."</li>
     </ul>
-    <div class="expand-content voz-extra">
+    <div class="voz-extra">
       <ul class="voz-bullets" style="margin:0;">
         <li>"Uma imersão na plataforma antes de fechar o contrato teria eliminado 90% dos ruídos — a gente teria entendido exatamente o que estava contratando."</li>
       </ul>
@@ -396,7 +408,7 @@
     <ul class="voz-bullets">
       <li>"Contratamos a Cortex para deixar de trabalhar com RP puramente conceitual e ter uma estratégia orientada por dados — mas ainda estamos em fase de integração e os objetivos iniciais não foram totalmente atingidos."</li>
     </ul>
-    <div class="expand-content voz-extra">
+    <div class="voz-extra">
       <ul class="voz-bullets" style="margin:0;">
         <li>"As agendas de insights trazem resultados que já gerenciamos — precisamos que a Cortex atue com mais protagonismo e nos traga ângulos novos, não apenas confirme o que já sabemos."</li>
       </ul>
@@ -619,6 +631,25 @@
     const tier = avg >= 9 ? 'green' : avg >= 7 ? 'yellow' : 'red';
     document.getElementById('cardOnboarding').classList.add('highlight-' + tier);
     document.getElementById('cardChartOnboarding').classList.add('destaque-' + tier);
+  })();
+
+  // ── resultado anterior nos cards de médias ───────────────────────────
+  (function () {
+    if (typeof PREV_AVERAGES === 'undefined') return;
+    const pairs = [
+      { elId: 'prevOnboarding', curr: DATA_ONBOARD.filter(v=>v!==null).reduce((a,b)=>a+b,0)/DATA_ONBOARD.filter(v=>v!==null).length, prev: PREV_AVERAGES.onboarding },
+      { elId: 'prevNPS',        curr: DATA_NPS.reduce((a,b)=>a+b,0)/DATA_NPS.length,       prev: PREV_AVERAGES.nps },
+      { elId: 'prevImpacto',    curr: DATA_IMPACTO.reduce((a,b)=>a+b,0)/DATA_IMPACTO.length, prev: PREV_AVERAGES.impacto },
+    ];
+    pairs.forEach(({ elId, curr, prev }) => {
+      const el = document.getElementById(elId);
+      if (!el || prev === null || prev === undefined) return;
+      const diff = curr - prev;
+      const prevStr = prev.toFixed(1).replace('.', ',');
+      const arrow = diff > 0.05 ? '↑' : diff < -0.05 ? '↓' : '→';
+      const cls = diff > 0.05 ? 'prev-up' : diff < -0.05 ? 'prev-down' : '';
+      el.innerHTML = `<span class="${cls}">${arrow} ${prevStr} anterior</span>`;
+    });
   })();
 
   // ── helper: ordena dois arrays paralelos por valor decrescente ───────

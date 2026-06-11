@@ -8,6 +8,10 @@ const DATA_IMPACTO = [9,  8, 10, 8];
 const DATA_ONBOARD = [10, 6, 10, 8]; // null para clientes Ongoing
 const DATA_RENOVACAO = ['2026-12-21', '2027-02-08', '2027-03-23', '2027-01-22']; // Unilever: data confirmada via Vitally
 
+// Médias do ciclo anterior — atualizar antes de adicionar novos clientes
+// null = sem ciclo anterior (não exibe)
+const PREV_AVERAGES = { onboarding: 8.7, nps: 8.7, impacto: 9.0 };
+
 // Histórico por cliente — cada entrada = 1 ciclo de QA
 // { data, nps, impacto, onboarding, elogios, criticas }
 const HISTORICO = {
