@@ -432,24 +432,11 @@
 <!-- RENOVAÇÃO & EVOLUÇÃO -->
 <div class="renov-section">
   <div class="renov-section-title">Renovação & Evolução</div>
-  <div class="charts-row cols-3" style="margin-bottom:20px;">
+  <div class="charts-row cols-2" style="margin-bottom:20px;">
     <div class="chart-card" style="padding:28px 28px 24px;">
       <div class="chart-title">Dias para Renovação</div>
       <div class="chart-sub">Contagem regressiva por cliente</div>
       <canvas id="chartRenovacao" height="170"></canvas>
-    </div>
-    <div class="chart-card" style="padding:28px 28px 24px;">
-      <div class="chart-header">
-        <div>
-          <div class="chart-title">Elogios vs Críticas</div>
-          <div class="chart-sub">Por cliente — ciclo atual</div>
-        </div>
-        <div class="chart-legend">
-          <div class="legend-item"><div class="legend-dot" style="background:rgba(139,45,191,0.85)"></div>Elogios</div>
-          <div class="legend-item"><div class="legend-dot" style="background:rgba(245,160,32,0.85)"></div>Críticas</div>
-        </div>
-      </div>
-      <canvas id="chartElogiosCriticas" height="170"></canvas>
     </div>
     <div class="chart-card" style="padding:28px 28px 24px;">
       <div class="chart-title">QAs Realizados por Cliente</div>
@@ -838,37 +825,6 @@
       scales: {
         x: { max: Math.max(...diasRenov) + 40, ticks: { stepSize: 60 }, grid: { color: GRID_COLOR } },
         y: { grid: { display: false } }
-      }
-    }
-  });
-
-  // ── ELOGIOS VS CRÍTICAS ───────────────────────────────────────────────
-  const elogios = CLIENTS.map(c => (HISTORICO[c] || []).reduce((s, q) => s + (q.elogios || []).length, 0));
-  const criticas = CLIENTS.map(c => (HISTORICO[c] || []).reduce((s, q) => s + (q.criticas || []).length, 0));
-  new Chart('chartElogiosCriticas', {
-    type: 'bar',
-    data: {
-      labels: CLIENTS,
-      datasets: [
-        { label: 'Elogios', data: elogios, backgroundColor: `${C_PURPLE}0.85)`, borderRadius: 4, barPercentage: 0.65 },
-        { label: 'Críticas', data: criticas, backgroundColor: 'rgba(245,160,32,0.85)', borderRadius: 4, barPercentage: 0.65 }
-      ]
-    },
-    options: {
-      responsive: true,
-      layout: { padding: { top: 8 } },
-      plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${c.raw}` } },
-        datalabels: {
-          anchor: 'center', align: 'center',
-          color: '#fff', font: { size: 13, weight: '700' },
-          formatter: v => v > 0 ? v : ''
-        }
-      },
-      scales: {
-        x: { grid: { display: false } },
-        y: { min: 0, max: Math.max(...elogios, ...criticas) + 2, ticks: { stepSize: 1 }, grid: { color: GRID_COLOR } }
       }
     }
   });
