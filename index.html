@@ -205,6 +205,9 @@
     .insights-col { border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; gap: 12px; }
     .insights-col.manter     { background: var(--brand-purple-light); border-top: 3px solid var(--brand-purple); }
     .insights-col.desenvolver { background: rgba(30,120,190,0.08);     border-top: 3px solid #1E78BE; }
+    .insights-chart-wrap { background: white; border-radius: 12px; padding: 20px 24px 16px; margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+    .insights-chart-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .insights-chart-title { font-size: 13px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
     .insights-col-hdr { display: flex; align-items: center; gap: 8px; }
     .col-icon  { font-size: 20px; line-height: 1; }
     .col-label { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; }
@@ -539,6 +542,17 @@
     <div class="voz-title">Insights da Jornada de Onboarding</div>
     <span class="insights-meta">4 QAs · 4 clientes</span>
   </div>
+  <div class="insights-chart-wrap">
+    <div class="insights-chart-hdr">
+      <span class="insights-chart-title">Frequência por etapa da jornada</span>
+      <div class="chart-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:rgba(139,45,191,0.85)"></div>Elogios</div>
+        <div class="legend-item"><div class="legend-dot" style="background:rgba(245,160,32,0.85)"></div>Críticas</div>
+      </div>
+    </div>
+    <canvas id="chartEtapas" height="180"></canvas>
+  </div>
+
   <div class="insights-cols">
 
     <!-- MANTER -->
@@ -829,8 +843,8 @@
   });
 
   // ── ELOGIOS VS CRÍTICAS ───────────────────────────────────────────────
-  const elogios = CLIENTS.map(c => (HISTORICO[c] || []).reduce((s, q) => s + q.elogios, 0));
-  const criticas = CLIENTS.map(c => (HISTORICO[c] || []).reduce((s, q) => s + q.criticas, 0));
+  const elogios = CLIENTS.map(c => (HISTORICO[c] || []).reduce((s, q) => s + (q.elogios || []).length, 0));
+  const criticas = CLIENTS.map(c => (HISTORICO[c] || []).reduce((s, q) => s + (q.criticas || []).length, 0));
   new Chart('chartElogiosCriticas', {
     type: 'bar',
     data: {
@@ -855,6 +869,55 @@
       scales: {
         x: { grid: { display: false } },
         y: { min: 0, max: Math.max(...elogios, ...criticas) + 2, ticks: { stepSize: 1 }, grid: { color: GRID_COLOR } }
+      }
+    }
+  });
+
+  // ── INSIGHTS POR ETAPA ───────────────────────────────────────────────
+  const etapaMap = {};
+  CLIENTS.forEach(c => {
+    (HISTORICO[c] || []).forEach(q => {
+      (q.elogios || []).forEach(e => {
+        if (!etapaMap[e]) etapaMap[e] = { elogios: 0, criticas: 0 };
+        etapaMap[e].elogios++;
+      });
+      (q.criticas || []).forEach(cr => {
+        if (!etapaMap[cr]) etapaMap[cr] = { elogios: 0, criticas: 0 };
+        etapaMap[cr].criticas++;
+      });
+    });
+  });
+  const etapaLabels = Object.keys(etapaMap).sort((a, b) =>
+    (etapaMap[b].elogios + etapaMap[b].criticas) - (etapaMap[a].elogios + etapaMap[a].criticas)
+  );
+  const etapaElogios  = etapaLabels.map(e => etapaMap[e].elogios);
+  const etapaCriticas = etapaLabels.map(e => etapaMap[e].criticas);
+  const maxEtapa = Math.max(...etapaElogios, ...etapaCriticas);
+  new Chart('chartEtapas', {
+    type: 'bar',
+    data: {
+      labels: etapaLabels,
+      datasets: [
+        { label: 'Elogios',  data: etapaElogios,  backgroundColor: `${C_PURPLE}0.85)`, borderRadius: 4, barPercentage: 0.6 },
+        { label: 'Críticas', data: etapaCriticas, backgroundColor: 'rgba(245,160,32,0.85)', borderRadius: 4, barPercentage: 0.6 }
+      ]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      layout: { padding: { right: 24 } },
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${c.raw} cliente${c.raw !== 1 ? 's' : ''}` } },
+        datalabels: {
+          anchor: 'end', align: 'end',
+          color: '#475569', font: { size: 12, weight: '700' },
+          formatter: v => v > 0 ? v : ''
+        }
+      },
+      scales: {
+        x: { min: 0, max: maxEtapa + 1, ticks: { stepSize: 1 }, grid: { color: GRID_COLOR } },
+        y: { grid: { display: false } }
       }
     }
   });

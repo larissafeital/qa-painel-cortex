@@ -13,10 +13,11 @@ const DATA_RENOVACAO = ['2026-12-21', '2027-02-08', '2027-03-23', '2027-01-22'];
 const PREV_AVERAGES = { onboarding: 8.7, nps: 8.7, impacto: 9.0 };
 
 // Histórico por cliente — cada entrada = 1 ciclo de QA
-// { data, nps, impacto, onboarding, elogios, criticas }
+// elogios/criticas: arrays com as etapas da jornada mencionadas pelo cliente
+// Etapas canônicas: 'Pré-venda' | 'Implantação' | 'Produto' | 'Metodologia' | 'Suporte' | 'Adoção' | 'CS / Ongoing' | 'Stakeholders'
 const HISTORICO = {
-  'Volvo':          [{ data: '2026-05-23', nps: 10, impacto: 9,  onboarding: 10, elogios: 2, criticas: 1 }],
-  'Tramontina':     [{ data: '2026-05-23', nps: 6,  impacto: 8,  onboarding: 6,  elogios: 0, criticas: 1 }],
-  'BHP':            [{ data: '2026-05-23', nps: 10, impacto: 10, onboarding: 10, elogios: 2, criticas: 1 }],
-  'Unilever Foods': [{ data: '2026-06-01', nps: 8,  impacto: 8,  onboarding: 8,  elogios: 1, criticas: 2 }],
+  'Volvo':          [{ data: '2026-05-23', nps: 10, impacto: 9,  onboarding: 10, elogios: ['Implantação', 'Produto'],          criticas: ['Metodologia'] }],
+  'Tramontina':     [{ data: '2026-05-23', nps: 6,  impacto: 8,  onboarding: 6,  elogios: [],                                  criticas: ['Pré-venda', 'Suporte'] }],
+  'BHP':            [{ data: '2026-05-23', nps: 10, impacto: 10, onboarding: 10, elogios: ['Implantação', 'Produto'],          criticas: ['Adoção'] }],
+  'Unilever Foods': [{ data: '2026-06-01', nps: 8,  impacto: 8,  onboarding: 8,  elogios: ['Produto'],                        criticas: ['CS / Ongoing', 'Stakeholders'] }],
 };
