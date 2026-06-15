@@ -552,78 +552,12 @@
       <span class="insights-chart-title">Frequência por etapa da jornada</span>
       <div class="chart-legend">
         <div class="legend-item"><div class="legend-dot" style="background:rgba(139,45,191,0.85)"></div>Elogios</div>
-        <div class="legend-item"><div class="legend-dot" style="background:rgba(245,160,32,0.85)"></div>Críticas</div>
+        <div class="legend-item"><div class="legend-dot" style="background:rgba(245,160,32,0.85)"></div>Melhorias</div>
       </div>
     </div>
     <canvas id="chartEtapas" height="180"></canvas>
   </div>
 
-  <div class="insights-cols">
-
-    <!-- MANTER -->
-    <div class="insights-col manter">
-      <div class="insights-col-hdr">
-        <span class="col-icon">↑</span>
-        <span class="col-label">Manter</span>
-        <span class="col-count">3 práticas</span>
-      </div>
-      <div class="insight-item">
-        <div class="insight-etapa">Implantação</div>
-        <div class="insight-acao">Equipe dedicada e nomeada desde o início</div>
-        <div class="insight-why">Volvo e BHP citaram a equipe pelo nome — a proximidade é fator decisivo para o NPS elevado</div>
-      </div>
-      <div class="insight-item">
-        <div class="insight-etapa">Implantação</div>
-        <div class="insight-acao">Processo de setup personalizado por cliente</div>
-        <div class="insight-why">BHP valorizou os dois meses de implantação cuidadosa; Volvo destacou o tempo dedicado como diferencial</div>
-      </div>
-      <div class="insight-item">
-        <div class="insight-etapa">Produto</div>
-        <div class="insight-acao">Curadoria executiva de veículos (relevância, não volume)</div>
-        <div class="insight-why">Percebida como diferencial claro frente a clipadoras tradicionais — entrega mais executiva</div>
-      </div>
-    </div>
-
-    <!-- DESENVOLVER -->
-    <div class="insights-col desenvolver">
-      <div class="insights-col-hdr">
-        <span class="col-icon">→</span>
-        <span class="col-label">Desenvolver</span>
-        <span class="col-count">6 oportunidades</span>
-      </div>
-      <div class="insight-item">
-        <div class="insight-etapa">Escopo Contratado</div>
-        <div class="insight-acao">Alinhar escopo detalhado antes de assinar</div>
-        <div class="insight-why">Tramontina descobriu limitações de cobertura só no onboarding — a expectativa quebrou na hora errada</div>
-      </div>
-      <div class="insight-item">
-        <div class="insight-etapa">Touchpoints</div>
-        <div class="insight-acao">Workshop de valoração no início do contrato</div>
-        <div class="insight-why">Confusão com NPS e valoração surgiu em 2 de 4 clientes — antecipar reduz atrito e acelera percepção de valor</div>
-      </div>
-      <div class="insight-item">
-        <div class="insight-etapa">Atendimento</div>
-        <div class="insight-acao">Passo a passo claro para ajuste de classificações</div>
-        <div class="insight-why">Tramontina ficou sem saber como resolver problemas operacionais — processo opaco gera frustração no início</div>
-      </div>
-      <div class="insight-item">
-        <div class="insight-etapa">Touchpoints</div>
-        <div class="insight-acao">Trilha estruturada de adoção da plataforma</div>
-        <div class="insight-why">BHP usou a ferramenta abaixo do potencial por falta de rotina guiada — adoção não acontece espontaneamente</div>
-      </div>
-      <div class="insight-item">
-        <div class="insight-etapa">Touchpoints</div>
-        <div class="insight-acao">Protagonismo analítico nas agendas de insights</div>
-        <div class="insight-why">Unilever quer ângulos novos, não confirmação do que já sabe — agendas reativas não são percebidas como valor</div>
-      </div>
-      <div class="insight-item">
-        <div class="insight-etapa">Touchpoints</div>
-        <div class="insight-acao">Incluir líderes seniores nas agendas de onboarding</div>
-        <div class="insight-why">Unilever identificou risco de desalinhamento estratégico ao restringir o contato à Champion</div>
-      </div>
-    </div>
-
-  </div>
 </div>
 
 <footer>Painel vivo — envie novos PDFs de QA para atualização &nbsp;·&nbsp; Cortex Intelligence · Brand Onboarding</footer>
@@ -887,7 +821,7 @@
       labels: etapaLabels,
       datasets: [
         { label: 'Elogios',  data: etapaElogios,  backgroundColor: `${C_PURPLE}0.85)`, borderRadius: 4, barPercentage: 0.6 },
-        { label: 'Críticas', data: etapaCriticas, backgroundColor: 'rgba(245,160,32,0.85)', borderRadius: 4, barPercentage: 0.6 }
+        { label: 'Melhorias', data: etapaCriticas, backgroundColor: 'rgba(245,160,32,0.85)', borderRadius: 4, barPercentage: 0.6 }
       ]
     },
     options: {
@@ -1010,7 +944,7 @@
     }
     if (hasCriticas) {
       if (hasElogios) html += '<div class="modal-section-gap"></div>';
-      html += `<div class="modal-section-title criticas">→ Oportunidades de Melhoria (${data.criticas.length})</div>`;
+      html += `<div class="modal-section-title criticas">→ Melhorias (${data.criticas.length})</div>`;
       data.criticas.forEach(c => {
         html += `<div class="modal-item"><div class="modal-item-cliente">${c.cliente}</div><div class="modal-item-texto">${c.texto}</div></div>`;
       });
