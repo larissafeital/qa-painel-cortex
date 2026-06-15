@@ -87,13 +87,16 @@
     .val-green  { color: var(--nps-promotor); }
     .val-yellow { color: #2E8FB5; }
     .val-red    { color: var(--nps-detrator); }
-    .card-prev  { display: none; }
-    .card-pp    { font-size: 15px; font-weight: 600; vertical-align: middle; margin-left: 4px; }
-    .card-pp.prev-up   { color: var(--nps-promotor); }
-    .card-pp.prev-down { color: var(--nps-detrator); }
-    .card.highlight-green .card-pp,
-    .card.highlight-red   .card-pp { color: rgba(255,255,255,0.8); font-weight: 700; }
-    .card.highlight-yellow .card-pp { color: rgba(0,60,90,0.65); }
+    .card-prev  { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+    .card-prev .prev-up   { color: var(--nps-promotor); font-weight: 600; }
+    .card-prev .prev-down { color: var(--nps-detrator);  font-weight: 600; }
+    .card.highlight-green .card-prev,
+    .card.highlight-red   .card-prev { color: rgba(255,255,255,0.65); }
+    .card.highlight-green .card-prev .prev-up,
+    .card.highlight-green .card-prev .prev-down,
+    .card.highlight-red   .card-prev .prev-up,
+    .card.highlight-red   .card-prev .prev-down { color: inherit; font-weight: 700; }
+    .card.highlight-yellow .card-prev { color: rgba(0,60,90,0.6); }
     .card.highlight-green {
       background: var(--nps-promotor);
       box-shadow: 0 2px 12px rgba(0,77,58,0.25);
@@ -603,24 +606,25 @@
     document.getElementById('cardChartOnboarding').classList.add('destaque-' + tier);
   })();
 
-  // ── variação p.p. vs ciclo anterior — exibida inline nos big numbers ──
+  // ── resultado anterior nos cards de médias ───────────────────────────
   (function () {
     if (typeof PREV_AVERAGES === 'undefined') return;
     const pairs = [
-      { valId: 'cardOnboardingValue', curr: DATA_ONBOARD.filter(v=>v!==null).reduce((a,b)=>a+b,0)/DATA_ONBOARD.filter(v=>v!==null).length, prev: PREV_AVERAGES.onboarding },
-      { valId: 'cardNPSValue',        curr: DATA_NPS.reduce((a,b)=>a+b,0)/DATA_NPS.length,                                                  prev: PREV_AVERAGES.nps },
-      { valId: 'cardImpactoValue',    curr: DATA_IMPACTO.reduce((a,b)=>a+b,0)/DATA_IMPACTO.length,                                          prev: PREV_AVERAGES.impacto },
+      { elId: 'prevOnboarding', curr: DATA_ONBOARD.filter(v=>v!==null).reduce((a,b)=>a+b,0)/DATA_ONBOARD.filter(v=>v!==null).length, prev: PREV_AVERAGES.onboarding },
+      { elId: 'prevNPS',        curr: DATA_NPS.reduce((a,b)=>a+b,0)/DATA_NPS.length,                                                  prev: PREV_AVERAGES.nps },
+      { elId: 'prevImpacto',    curr: DATA_IMPACTO.reduce((a,b)=>a+b,0)/DATA_IMPACTO.length,                                          prev: PREV_AVERAGES.impacto },
     ];
-    pairs.forEach(({ valId, curr, prev }) => {
-      const el = document.getElementById(valId);
+    pairs.forEach(({ elId, curr, prev }) => {
+      const el = document.getElementById(elId);
       if (!el || prev === null || prev === undefined) return;
       const diff = +(curr - prev).toFixed(1);
-      if (Math.abs(diff) < 0.05) return;
-      const arrow = diff > 0 ? '▲' : '▼';
-      const sign  = diff > 0 ? '+' : '−';
-      const cls   = diff > 0 ? 'prev-up' : 'prev-down';
+      const arrow = diff > 0.05 ? '↑' : diff < -0.05 ? '↓' : '→';
+      const cls   = diff > 0.05 ? 'prev-up' : diff < -0.05 ? 'prev-down' : '';
+      const prevStr = prev.toFixed(1).replace('.', ',');
+      const sign    = diff > 0.05 ? '+' : diff < -0.05 ? '−' : '';
       const absDiff = Math.abs(diff).toFixed(1).replace('.', ',');
-      el.innerHTML += ` <span class="card-pp ${cls}">(${arrow} ${sign}${absDiff} p.p.)</span>`;
+      const ppStr   = Math.abs(diff) >= 0.05 ? ` (${sign}${absDiff} p.p.)` : '';
+      el.innerHTML  = `<span class="${cls}">${arrow} ${prevStr}${ppStr}</span>`;
     });
   })();
 
