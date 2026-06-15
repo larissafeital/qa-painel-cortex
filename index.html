@@ -208,6 +208,24 @@
     .insights-chart-wrap { background: white; border-radius: 12px; padding: 20px 24px 16px; margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
     .insights-chart-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
     .insights-chart-title { font-size: 13px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* ── MODAL ETAPA ── */
+    .etapa-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.45); z-index: 1000; align-items: center; justify-content: center; }
+    .etapa-modal-overlay.open { display: flex; }
+    .etapa-modal { background: white; border-radius: 16px; padding: 28px 30px; width: 500px; max-width: 92vw; max-height: 82vh; overflow-y: auto; box-shadow: 0 24px 64px rgba(0,0,0,0.22); }
+    .etapa-modal-hdr { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 22px; gap: 12px; }
+    .etapa-modal-name { font-size: 20px; font-weight: 800; color: var(--text-primary); }
+    .etapa-modal-desc { font-size: 12px; color: var(--text-muted); margin-top: 5px; line-height: 1.5; max-width: 360px; }
+    .etapa-modal-close { background: var(--bg-page); border: none; cursor: pointer; font-size: 16px; color: var(--text-muted); padding: 6px 10px; border-radius: 8px; flex-shrink: 0; line-height: 1; }
+    .etapa-modal-close:hover { background: #E2E8F0; }
+    .modal-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 10px; }
+    .modal-section-title.elogios  { color: var(--brand-purple); }
+    .modal-section-title.criticas { color: #D97706; }
+    .modal-section-gap { margin-top: 18px; }
+    .modal-item { background: var(--bg-page); border-radius: 9px; padding: 11px 14px; margin-bottom: 8px; }
+    .modal-item-cliente { font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.4px; }
+    .modal-item-texto { font-size: 13px; color: var(--text-body); line-height: 1.55; }
+    .modal-empty { font-size: 13px; color: var(--text-placeholder); font-style: italic; padding: 10px 0; }
     .insights-col-hdr { display: flex; align-items: center; gap: 8px; }
     .col-icon  { font-size: 20px; line-height: 1; }
     .col-label { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; }
@@ -574,32 +592,32 @@
         <span class="col-count">6 oportunidades</span>
       </div>
       <div class="insight-item">
-        <div class="insight-etapa">Pré-venda</div>
+        <div class="insight-etapa">Escopo Contratado</div>
         <div class="insight-acao">Alinhar escopo detalhado antes de assinar</div>
         <div class="insight-why">Tramontina descobriu limitações de cobertura só no onboarding — a expectativa quebrou na hora errada</div>
       </div>
       <div class="insight-item">
-        <div class="insight-etapa">Metodologia</div>
+        <div class="insight-etapa">Touchpoints</div>
         <div class="insight-acao">Workshop de valoração no início do contrato</div>
         <div class="insight-why">Confusão com NPS e valoração surgiu em 2 de 4 clientes — antecipar reduz atrito e acelera percepção de valor</div>
       </div>
       <div class="insight-item">
-        <div class="insight-etapa">Suporte</div>
+        <div class="insight-etapa">Atendimento</div>
         <div class="insight-acao">Passo a passo claro para ajuste de classificações</div>
         <div class="insight-why">Tramontina ficou sem saber como resolver problemas operacionais — processo opaco gera frustração no início</div>
       </div>
       <div class="insight-item">
-        <div class="insight-etapa">Adoção</div>
+        <div class="insight-etapa">Touchpoints</div>
         <div class="insight-acao">Trilha estruturada de adoção da plataforma</div>
         <div class="insight-why">BHP usou a ferramenta abaixo do potencial por falta de rotina guiada — adoção não acontece espontaneamente</div>
       </div>
       <div class="insight-item">
-        <div class="insight-etapa">CS / Ongoing</div>
+        <div class="insight-etapa">Touchpoints</div>
         <div class="insight-acao">Protagonismo analítico nas agendas de insights</div>
         <div class="insight-why">Unilever quer ângulos novos, não confirmação do que já sabe — agendas reativas não são percebidas como valor</div>
       </div>
       <div class="insight-item">
-        <div class="insight-etapa">Stakeholders</div>
+        <div class="insight-etapa">Touchpoints</div>
         <div class="insight-acao">Incluir líderes seniores nas agendas de onboarding</div>
         <div class="insight-why">Unilever identificou risco de desalinhamento estratégico ao restringir o contato à Champion</div>
       </div>
@@ -609,6 +627,20 @@
 </div>
 
 <footer>Painel vivo — envie novos PDFs de QA para atualização &nbsp;·&nbsp; Cortex Intelligence · Brand Onboarding</footer>
+
+<!-- MODAL ETAPA -->
+<div id="etapaModal" class="etapa-modal-overlay" onclick="closeEtapaModal(event)">
+  <div class="etapa-modal">
+    <div class="etapa-modal-hdr">
+      <div>
+        <div class="etapa-modal-name" id="modalEtapaName"></div>
+        <div class="etapa-modal-desc" id="modalEtapaDesc"></div>
+      </div>
+      <button class="etapa-modal-close" onclick="document.getElementById('etapaModal').classList.remove('open')">✕</button>
+    </div>
+    <div id="modalContent"></div>
+  </div>
+</div>
 
 <script>
   // Dados carregados de qa-data.js
@@ -862,6 +894,13 @@
       indexAxis: 'y',
       responsive: true,
       layout: { padding: { right: 24 } },
+      onClick: (event, elements) => {
+        if (!elements.length) return;
+        showEtapaDetail(etapaLabels[elements[0].index]);
+      },
+      onHover: (event, elements) => {
+        event.native.target.style.cursor = elements.length ? 'pointer' : 'default';
+      },
       plugins: {
         legend: { display: false },
         tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${c.raw} cliente${c.raw !== 1 ? 's' : ''}` } },
@@ -953,6 +992,40 @@
         }
       }
     });
+  }
+
+  function showEtapaDetail(etapa) {
+    const data = typeof INSIGHTS !== 'undefined' && INSIGHTS[etapa];
+    if (!data) return;
+    document.getElementById('modalEtapaName').textContent = etapa;
+    document.getElementById('modalEtapaDesc').textContent = data.descricao || '';
+    let html = '';
+    const hasElogios  = data.elogios  && data.elogios.length;
+    const hasCriticas = data.criticas && data.criticas.length;
+    if (hasElogios) {
+      html += `<div class="modal-section-title elogios">↑ Elogios (${data.elogios.length})</div>`;
+      data.elogios.forEach(e => {
+        html += `<div class="modal-item"><div class="modal-item-cliente">${e.cliente}</div><div class="modal-item-texto">${e.texto}</div></div>`;
+      });
+    }
+    if (hasCriticas) {
+      if (hasElogios) html += '<div class="modal-section-gap"></div>';
+      html += `<div class="modal-section-title criticas">→ Oportunidades de Melhoria (${data.criticas.length})</div>`;
+      data.criticas.forEach(c => {
+        html += `<div class="modal-item"><div class="modal-item-cliente">${c.cliente}</div><div class="modal-item-texto">${c.texto}</div></div>`;
+      });
+    }
+    if (!hasElogios && !hasCriticas) {
+      html = '<div class="modal-empty">Nenhum registro para esta etapa.</div>';
+    }
+    document.getElementById('modalContent').innerHTML = html;
+    document.getElementById('etapaModal').classList.add('open');
+  }
+
+  function closeEtapaModal(event) {
+    if (event.target === document.getElementById('etapaModal')) {
+      document.getElementById('etapaModal').classList.remove('open');
+    }
   }
 
   function toggleAllVoz(btn) {
