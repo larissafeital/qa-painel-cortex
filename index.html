@@ -789,6 +789,20 @@
     const today = new Date(); today.setHours(0,0,0,0);
     return Math.ceil((new Date(dateStr) - today) / 86400000);
   }
+  function daysToShort(d) {
+    const m = Math.floor(d / 30), r = d % 30;
+    if (m === 0) return `${r}d`;
+    if (r === 0) return `${m}m`;
+    return `${m}m ${r}d`;
+  }
+  function daysToFull(d) {
+    const m = Math.floor(d / 30), r = d % 30;
+    const mStr = m === 1 ? '1 mês' : `${m} meses`;
+    const dStr = r === 1 ? '1 dia' : `${r} dias`;
+    if (m === 0) return `${r} dias`;
+    if (r === 0) return mStr;
+    return `${mStr} e ${dStr}`;
+  }
   const diasRenovRaw = DATA_RENOVACAO.map(daysUntil);
   // ordem crescente: quem renova antes aparece primeiro (menor nº de dias no topo)
   const renovPairs = CLIENTS.map((l, i) => ({ l, d: diasRenovRaw[i] })).sort((a, b) => a.d - b.d);
@@ -801,7 +815,7 @@
     type: 'bar',
     data: {
       labels: renovLabels,
-      datasets: [{ label: 'Dias', data: diasRenov, backgroundColor: renovColors, borderRadius: 6 }]
+      datasets: [{ label: 'Renovação', data: diasRenov, backgroundColor: renovColors, borderRadius: 6 }]
     },
     options: {
       indexAxis: 'y',
@@ -809,15 +823,15 @@
       layout: { padding: { right: 8 } },
       plugins: {
         legend: { display: false },
-        tooltip: { callbacks: { label: c => ` ${c.raw} dias para renovação` } },
+        tooltip: { callbacks: { label: c => ` ${daysToFull(c.raw)} para renovação` } },
         datalabels: {
           anchor: 'center', align: 'center',
-          color: '#fff', font: { size: 13, weight: '700' },
-          formatter: v => `${v}d`
+          color: '#fff', font: { size: 12, weight: '700' },
+          formatter: v => daysToShort(v)
         }
       },
       scales: {
-        x: { max: Math.max(...diasRenov) + 40, ticks: { stepSize: 60 }, grid: { color: GRID_COLOR } },
+        x: { max: Math.max(...diasRenov) + 40, ticks: { display: false }, grid: { color: GRID_COLOR } },
         y: { grid: { display: false } }
       }
     }
