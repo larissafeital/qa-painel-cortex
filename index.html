@@ -789,25 +789,37 @@
     const today = new Date(); today.setHours(0,0,0,0);
     return Math.ceil((new Date(dateStr) - today) / 86400000);
   }
-  function daysToShort(d) {
-    const m = Math.floor(d / 30), r = d % 30;
-    if (m === 0) return `${r}d`;
-    if (r === 0) return `${m}m`;
-    return `${m}m ${r}d`;
+  // Calcula meses e dias restantes usando calendário real (respeita meses de 28/29/30/31 dias)
+  function monthsDaysUntil(dateStr) {
+    const today = new Date(); today.setHours(0,0,0,0);
+    const target = new Date(dateStr + 'T00:00:00');
+    let months = (target.getFullYear() - today.getFullYear()) * 12 + (target.getMonth() - today.getMonth());
+    if (target.getDate() < today.getDate()) months--;
+    const afterMonths = new Date(today);
+    afterMonths.setMonth(afterMonths.getMonth() + months);
+    const days = Math.ceil((target - afterMonths) / 86400000);
+    return { months, days };
   }
-  function daysToFull(d) {
-    const m = Math.floor(d / 30), r = d % 30;
+  function renovShort(dateStr) {
+    const { months: m, days: d } = monthsDaysUntil(dateStr);
+    if (m === 0) return `${d}d`;
+    if (d === 0) return `${m}m`;
+    return `${m}m ${d}d`;
+  }
+  function renovFull(dateStr) {
+    const { months: m, days: d } = monthsDaysUntil(dateStr);
     const mStr = m === 1 ? '1 mês' : `${m} meses`;
-    const dStr = r === 1 ? '1 dia' : `${r} dias`;
-    if (m === 0) return `${r} dias`;
-    if (r === 0) return mStr;
+    const dStr = d === 1 ? '1 dia' : `${d} dias`;
+    if (m === 0) return `${d} dias`;
+    if (d === 0) return mStr;
     return `${mStr} e ${dStr}`;
   }
   const diasRenovRaw = DATA_RENOVACAO.map(daysUntil);
-  // ordem crescente: quem renova antes aparece primeiro (menor nº de dias no topo)
-  const renovPairs = CLIENTS.map((l, i) => ({ l, d: diasRenovRaw[i] })).sort((a, b) => a.d - b.d);
-  const diasRenov = renovPairs.map(p => p.d);
+  // ordem crescente: quem renova antes aparece primeiro
+  const renovPairs = CLIENTS.map((l, i) => ({ l, d: diasRenovRaw[i], date: DATA_RENOVACAO[i] })).sort((a, b) => a.d - b.d);
+  const diasRenov  = renovPairs.map(p => p.d);
   const renovLabels = renovPairs.map(p => p.l);
+  const renovDates  = renovPairs.map(p => p.date);
   const renovColors = diasRenov.map(d =>
     d > 180 ? 'rgba(0,77,58,0.8)' : d > 90 ? 'rgba(144,204,229,0.9)' : 'rgba(214,74,23,0.85)'
   );
@@ -823,11 +835,11 @@
       layout: { padding: { right: 8 } },
       plugins: {
         legend: { display: false },
-        tooltip: { callbacks: { label: c => ` ${daysToFull(c.raw)} para renovação` } },
+        tooltip: { callbacks: { label: c => ` ${renovFull(renovDates[c.dataIndex])} para renovação` } },
         datalabels: {
           anchor: 'center', align: 'center',
           color: '#fff', font: { size: 12, weight: '700' },
-          formatter: v => daysToShort(v)
+          formatter: (v, ctx) => renovShort(renovDates[ctx.dataIndex])
         }
       },
       scales: {
