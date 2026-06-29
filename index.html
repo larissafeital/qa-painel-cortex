@@ -310,9 +310,98 @@
 
     /* ── FOOTER ── */
     footer { text-align: center; color: var(--text-subtle); font-size: 11px; margin-top: 8px; padding-bottom: 8px; }
+
+    /* ── TABS ── */
+    .tab-nav {
+      display: flex; gap: 4px; margin-bottom: 28px;
+      border-bottom: 2px solid #E2E8F0;
+    }
+    .tab-btn {
+      padding: 10px 22px; font-size: 13px; font-weight: 600;
+      background: none; border: none; cursor: pointer;
+      color: var(--text-muted); border-bottom: 3px solid transparent;
+      margin-bottom: -2px; border-radius: 8px 8px 0 0;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+    }
+    .tab-btn:hover { color: var(--brand-purple); background: var(--brand-purple-light); }
+    .tab-btn.active { color: var(--brand-purple); border-bottom-color: var(--brand-purple); background: var(--brand-purple-light); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── PENDO TAB ── */
+    .pendo-cards-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .pendo-card {
+      background: white; border-radius: 14px;
+      padding: 20px 22px; box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+    .pendo-card-label {
+      font-size: 11px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.6px; color: var(--text-placeholder); margin-bottom: 6px;
+    }
+    .pendo-card-value { font-size: 36px; font-weight: 800; line-height: 1; }
+    .pendo-card-sub { font-size: 12px; color: var(--text-muted); margin-top: 5px; }
+    .pendo-card-tag {
+      display: inline-block; font-size: 10px; font-weight: 700;
+      padding: 2px 8px; border-radius: 20px; margin-top: 6px;
+    }
+    .pendo-val-red   { color: var(--nps-detrator); }
+    .pendo-val-yellow { color: var(--brand-orange-dark); }
+    .pendo-val-green { color: var(--nps-promotor); }
+    .pendo-val-purple { color: var(--brand-purple); }
+    .pendo-tag-red    { background: var(--nps-detrator-bg); color: var(--nps-detrator); }
+    .pendo-tag-yellow { background: var(--brand-orange-light); color: var(--brand-orange-dark); }
+    .pendo-tag-green  { background: var(--nps-promotor-bg); color: var(--nps-promotor); }
+    .pendo-tag-purple { background: var(--brand-purple-light); color: var(--brand-purple); }
+    .pendo-section-title {
+      font-size: 15px; font-weight: 700; color: var(--text-primary);
+      margin: 28px 0 14px;
+    }
+    .pendo-charts-row {
+      display: grid; gap: 16px; margin-bottom: 24px;
+    }
+    .pendo-charts-row.cols-2 { grid-template-columns: 1fr 1fr; }
+    .pendo-charts-row.cols-1 { grid-template-columns: 1fr; }
+    .pendo-chart-card {
+      background: white; border-radius: 14px;
+      padding: 22px 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+    .pendo-chart-title { font-size: 13px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+    .pendo-chart-sub   { font-size: 11px; color: var(--text-muted); margin-bottom: 16px; }
+    .pendo-table-wrap { background: white; border-radius: 14px; padding: 22px 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); overflow-x: auto; }
+    .pendo-table-wrap table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .pendo-table-wrap th { padding: 8px 10px; text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); border-bottom: 1px solid #E2E8F0; }
+    .pendo-table-wrap td { padding: 9px 10px; border-bottom: 1px solid #F1F5F9; color: var(--text-body); }
+    .pendo-table-wrap tr:last-child td { border-bottom: none; }
+    .p-badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 600; }
+    .p-public  { background: #DCFCE7; color: #166534; }
+    .p-disabled { background: #F1F5F9; color: #64748B; }
+    .pendo-pes-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 12px; margin-top: 14px;
+    }
+    .pendo-pes-item {
+      background: var(--bg-page); border-radius: 10px;
+      padding: 14px 16px; text-align: center;
+    }
+    .pendo-pes-item-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); }
+    .pendo-pes-item-val { font-size: 26px; font-weight: 800; margin-top: 4px; }
+    .pendo-note { font-size: 11px; color: var(--text-muted); margin-top: 6px; font-style: italic; }
   </style>
 </head>
 <body>
+
+<!-- TAB NAV -->
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('qa', this)">QA Onboarding</button>
+  <button class="tab-btn" onclick="switchTab('pendo', this)">Usabilidade · Pendo</button>
+</div>
+
+<div id="tab-qa" class="tab-panel active">
 
 <!-- BANNER -->
 <div class="update-banner" id="updateBanner">
@@ -611,6 +700,104 @@
 </div>
 
 <footer>Painel vivo — envie novos PDFs de QA para atualização &nbsp;·&nbsp; Cortex Intelligence · Brand Onboarding</footer>
+
+</div><!-- /tab-qa -->
+
+<!-- ═══════════════════════════════════════════════════════ PENDO TAB -->
+<div id="tab-pendo" class="tab-panel">
+
+  <!-- CARDS NPS + PES -->
+  <div class="pendo-cards-row">
+    <div class="pendo-card">
+      <div class="pendo-card-label">NPS in-app · PR</div>
+      <div class="pendo-card-value pendo-val-red">−10,5</div>
+      <div class="pendo-card-sub">38 respostas · média 6,2</div>
+      <span class="pendo-card-tag pendo-tag-red">Detrator</span>
+    </div>
+    <div class="pendo-card">
+      <div class="pendo-card-label">NPS in-app · PR Agências</div>
+      <div class="pendo-card-value pendo-val-yellow">+28,1</div>
+      <div class="pendo-card-sub">32 respostas · média 7,6</div>
+      <span class="pendo-card-tag pendo-tag-yellow">Passivo</span>
+    </div>
+    <div class="pendo-card">
+      <div class="pendo-card-label">NPS in-app · B2B</div>
+      <div class="pendo-card-value pendo-val-green">+58,4</div>
+      <div class="pendo-card-sub">231 respostas · média 8,7</div>
+      <span class="pendo-card-tag pendo-tag-green">Promotor</span>
+    </div>
+    <div class="pendo-card">
+      <div class="pendo-card-label">Product Engagement Score</div>
+      <div class="pendo-card-value pendo-val-purple">18,9</div>
+      <div class="pendo-card-sub">Abr–Jun 2026 · plataforma geral</div>
+      <span class="pendo-card-tag pendo-tag-purple">PES Cortex</span>
+    </div>
+  </div>
+
+  <!-- PES BREAKDOWN -->
+  <div class="pendo-charts-row cols-2">
+    <div class="pendo-chart-card">
+      <div class="pendo-chart-title">Breakdown do PES</div>
+      <div class="pendo-chart-sub">Adoção · Stickiness · Crescimento — Abr a Jun 2026</div>
+      <div class="pendo-pes-grid">
+        <div class="pendo-pes-item">
+          <div class="pendo-pes-item-label">Adoção</div>
+          <div class="pendo-pes-item-val pendo-val-red">6,1</div>
+        </div>
+        <div class="pendo-pes-item">
+          <div class="pendo-pes-item-label">Stickiness</div>
+          <div class="pendo-pes-item-val pendo-val-yellow">18,6</div>
+        </div>
+        <div class="pendo-pes-item">
+          <div class="pendo-pes-item-label">Crescimento</div>
+          <div class="pendo-pes-item-val pendo-val-green">32,0</div>
+        </div>
+      </div>
+      <p class="pendo-note">Stickiness = DAU/MAU. Crescimento = contas novas vs. perdidas. Adoção = % de features core utilizadas.</p>
+    </div>
+    <div class="pendo-chart-card">
+      <div class="pendo-chart-title">NPS in-app por Produto</div>
+      <div class="pendo-chart-sub">Jan a Jun 2026 · escala −100 a +100</div>
+      <canvas id="chartPendoNPS" height="160"></canvas>
+    </div>
+  </div>
+
+  <!-- TOP GUIAS -->
+  <div class="pendo-charts-row cols-2">
+    <div class="pendo-chart-card">
+      <div class="pendo-chart-title">Top Guias por Visualizações</div>
+      <div class="pendo-chart-sub">Últimos 90 dias · todos os tipos</div>
+      <canvas id="chartPendoGuias" height="200"></canvas>
+    </div>
+    <div class="pendo-chart-card">
+      <div class="pendo-chart-title">Taxa de Engajamento dos Guias</div>
+      <div class="pendo-chart-sub">% visitantes únicos que interagiram · últimos 90 dias</div>
+      <canvas id="chartPendoEngajamento" height="200"></canvas>
+    </div>
+  </div>
+
+  <!-- TABELA DE GUIAS -->
+  <div class="pendo-section-title">Todos os Guias — Efetividade (últimos 90 dias)</div>
+  <div class="pendo-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Guia</th>
+          <th>Status</th>
+          <th>Ativação</th>
+          <th>Visualizações</th>
+          <th>Visitantes únicos</th>
+          <th>Engajamento %</th>
+          <th>Conclusão %</th>
+        </tr>
+      </thead>
+      <tbody id="pendoGuideTableBody"></tbody>
+    </table>
+  </div>
+
+  <p class="pendo-note" style="margin-top:12px;">Fonte: Pendo · Cortex &amp; Geofusion · Período: 31/03–28/06/2026. Engajamento = visitantes que interagiram / visitantes que visualizaram. Conclusão = visitantes que chegaram ao último passo (guias multi-step).</p>
+
+</div><!-- /tab-pendo -->
 
 <!-- MODAL ETAPA -->
 <div id="etapaModal" class="etapa-modal-overlay" onclick="closeEtapaModal(event)">
@@ -1055,6 +1242,146 @@
     const open = content.classList.toggle('open');
     const label = btn.dataset.label || 'Ver relato do cliente';
     btn.textContent = open ? 'Recolher ▴' : label + ' ▾';
+  }
+
+  // ── TAB SWITCHING ────────────────────────────────────────────────────────
+  let pendoChartsBuilt = false;
+
+  function switchTab(id, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    btn.classList.add('active');
+    if (id === 'pendo' && !pendoChartsBuilt) {
+      buildPendoCharts();
+      pendoChartsBuilt = true;
+    }
+  }
+
+  // ── PENDO CHARTS ─────────────────────────────────────────────────────────
+  function buildPendoCharts() {
+
+    // --- NPS por produto
+    const npsLabels = ['GTM B2B2C', 'B2B', 'GI (Geofusion)', 'PR · Agências', 'PR'];
+    const npsValues = [100, 58.4, 65.3, 28.1, -10.5];
+    const npsColors = npsValues.map(v => v >= 50 ? 'rgba(0,77,58,0.8)' : v >= 0 ? 'rgba(144,204,229,0.9)' : 'rgba(214,74,23,0.8)');
+
+    new Chart(document.getElementById('chartPendoNPS'), {
+      type: 'bar',
+      data: {
+        labels: npsLabels,
+        datasets: [{ data: npsValues, backgroundColor: npsColors, borderRadius: 6 }]
+      },
+      options: {
+        indexAxis: 'y',
+        plugins: {
+          legend: { display: false },
+          datalabels: {
+            anchor: d => d.dataset.data[d.dataIndex] >= 0 ? 'end' : 'start',
+            align: d => d.dataset.data[d.dataIndex] >= 0 ? 'end' : 'start',
+            formatter: v => (v >= 0 ? '+' : '') + v.toFixed(1),
+            font: { weight: 700, size: 11 },
+            color: d => d.dataset.data[d.dataIndex] >= 0 ? '#1E293B' : '#D64A17'
+          }
+        },
+        scales: {
+          x: { min: -30, max: 110, grid: { color: GRID_COLOR }, ticks: { callback: v => (v > 0 ? '+' : '') + v } },
+          y: { grid: { display: false } }
+        }
+      }
+    });
+
+    // --- Top guias por views
+    const guiaLabels = ['Cortex Summit\'26', 'Lançamento Explorador', 'Correção Potencial', 'Preditor', 'Sociodemografia 2026', 'NPS B2B', 'NPS GI', 'Aviso Instabilidade'];
+    const guiaViews  = [25522, 2682, 2426, 2371, 1542, 1332, 1207, 1094];
+    const guiaColors = guiaLabels.map((_, i) => i < 2 ? 'rgba(139,45,191,0.8)' : 'rgba(139,45,191,0.45)');
+
+    new Chart(document.getElementById('chartPendoGuias'), {
+      type: 'bar',
+      data: {
+        labels: guiaLabels,
+        datasets: [{ data: guiaViews, backgroundColor: guiaColors, borderRadius: 6 }]
+      },
+      options: {
+        plugins: {
+          legend: { display: false },
+          datalabels: {
+            anchor: 'end', align: 'end',
+            formatter: v => v >= 1000 ? (v/1000).toFixed(1) + 'k' : v,
+            font: { weight: 700, size: 10 }, color: '#475569'
+          }
+        },
+        scales: {
+          y: { grid: { color: GRID_COLOR }, ticks: { callback: v => v >= 1000 ? (v/1000).toFixed(0) + 'k' : v } },
+          x: { grid: { display: false }, ticks: { font: { size: 10 }, maxRotation: 30 } }
+        }
+      }
+    });
+
+    // --- Engajamento dos guias
+    const engLabels = ['GF · Área do Usuário', 'Lançamento Explorador', '[PR] Satisfação produto', 'Masterclass Prospecção', 'NPS B2B', 'NPS GI', 'Aviso Instabilidade', 'Busca contato Plugin'];
+    const engValues = [96.4, 22.8, 18.1, 18.1, 20.1, 16.6, 16.1, 16.4];
+    const engColors = engValues.map(v => v >= 50 ? 'rgba(0,77,58,0.8)' : v >= 15 ? 'rgba(139,45,191,0.75)' : 'rgba(144,204,229,0.9)');
+
+    new Chart(document.getElementById('chartPendoEngajamento'), {
+      type: 'bar',
+      data: {
+        labels: engLabels,
+        datasets: [{ data: engValues, backgroundColor: engColors, borderRadius: 6 }]
+      },
+      options: {
+        plugins: {
+          legend: { display: false },
+          datalabels: {
+            anchor: 'end', align: 'end',
+            formatter: v => v.toFixed(1) + '%',
+            font: { weight: 700, size: 10 }, color: '#475569'
+          }
+        },
+        scales: {
+          y: { max: 110, grid: { color: GRID_COLOR }, ticks: { callback: v => v + '%' } },
+          x: { grid: { display: false }, ticks: { font: { size: 10 }, maxRotation: 30 } }
+        }
+      }
+    });
+
+    // --- Tabela de guias
+    const guideRows = [
+      { name: '[MKT] Cortex Summit\'26',             state: 'disabled', launch: 'auto', views: 25522, visitors: 2025, eng: 4.4,  compl: null },
+      { name: 'Geofusion - Pixel Code 2',             state: 'public',  launch: 'auto', views: 62716, visitors: 1467, eng: null, compl: null },
+      { name: '[MKT] Preditor',                       state: 'disabled', launch: 'auto', views: 2371,  visitors: 1288, eng: 12.7, compl: null },
+      { name: '[MKT] Lançamento Explorador',          state: 'disabled', launch: 'auto', views: 2682,  visitors: 1213, eng: 22.8, compl: null },
+      { name: 'GF - Correção Potencial de Consumo',   state: 'disabled', launch: 'auto', views: 2426,  visitors: 1116, eng: null, compl: null },
+      { name: 'NPS GI',                               state: 'public',  launch: 'auto', views: 1207,  visitors: 993,  eng: 16.6, compl: 16.6 },
+      { name: '[MKT] Sociodemografia 2026',           state: 'disabled', launch: 'auto', views: 1542,  visitors: 753,  eng: 10.5, compl: null },
+      { name: 'NPS B2B',                              state: 'public',  launch: 'auto', views: 1332,  visitors: 631,  eng: 20.1, compl: 20.1 },
+      { name: 'Aviso Instabilidade 09/04',            state: 'disabled', launch: 'auto', views: 1094,  visitors: 616,  eng: 16.1, compl: null },
+      { name: 'GF - Aviso Indisponibilidade',         state: 'disabled', launch: 'auto', views: 878,   visitors: 736,  eng: null, compl: null },
+      { name: 'Masterclass Prospecção de Elite',      state: 'disabled', launch: 'auto', views: 762,   visitors: 310,  eng: 18.1, compl: null },
+      { name: 'Lançamento: Busca contato Plugin',     state: 'disabled', launch: 'auto', views: 552,   visitors: 445,  eng: 16.4, compl: null },
+      { name: '[PR] Satisfação do produto',           state: 'disabled', launch: 'auto', views: 532,   visitors: 226,  eng: 18.1, compl: 18.1 },
+      { name: '[MKT] Lançamento Pulso Urbano',        state: 'public',  launch: 'auto', views: 497,   visitors: 386,  eng: 10.9, compl: null },
+      { name: 'GF - Área do Usuário',                 state: 'disabled', launch: 'auto', views: 467,   visitors: 390,  eng: 96.4, compl: null },
+      { name: '[Brand] CSAT Clipping',                state: 'public',  launch: 'auto', views: 223,   visitors: 149,  eng: 6.7,  compl: null },
+    ];
+
+    function engCell(v) {
+      if (v === null) return '<td style="color:var(--text-muted)">—</td>';
+      const cls = v >= 50 ? 'pendo-val-green' : v >= 15 ? 'pendo-val-purple' : 'pendo-val-yellow';
+      return `<td class="${cls}" style="font-weight:700">${v.toFixed(1)}%</td>`;
+    }
+
+    const tbody = document.getElementById('pendoGuideTableBody');
+    tbody.innerHTML = guideRows.map(r => `
+      <tr>
+        <td style="font-weight:600">${r.name}</td>
+        <td><span class="p-badge ${r.state === 'public' ? 'p-public' : 'p-disabled'}">${r.state === 'public' ? 'Ativo' : 'Inativo'}</span></td>
+        <td style="color:var(--text-muted)">${r.launch}</td>
+        <td>${r.views.toLocaleString('pt-BR')}</td>
+        <td>${r.visitors.toLocaleString('pt-BR')}</td>
+        ${engCell(r.eng)}
+        ${r.compl !== null ? `<td style="font-weight:600;color:var(--brand-purple)">${r.compl.toFixed(1)}%</td>` : '<td style="color:var(--text-muted)">—</td>'}
+      </tr>`).join('');
   }
 </script>
 
