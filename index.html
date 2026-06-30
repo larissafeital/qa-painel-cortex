@@ -738,12 +738,12 @@
   <div class="pendo-charts-row cols-2">
     <div class="pendo-chart-card">
       <div class="pendo-chart-title">Total de visualizações de guias por cliente</div>
-      <div class="pendo-chart-sub">Todos os guias Pendo · Jan–Jun 2026</div>
+      <div class="pendo-chart-sub">Segmento Usuários Finais PR · Jan–Jun 2026</div>
       <canvas id="chartPendoViewsCliente" height="180"></canvas>
     </div>
     <div class="pendo-chart-card">
       <div class="pendo-chart-title">Guias únicos visualizados por cliente</div>
-      <div class="pendo-chart-sub">Diversidade de engajamento com a plataforma</div>
+      <div class="pendo-chart-sub">Segmento Usuários Finais PR · Jan–Jun 2026</div>
       <canvas id="chartPendoGuiasUnicos" height="180"></canvas>
     </div>
   </div>
@@ -772,7 +772,7 @@
   <div class="pendo-section-title">Detalhe completo por cliente</div>
   <div id="pendoClienteCards" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px;"></div>
 
-  <p class="pendo-note" style="margin-top:4px;">Fonte: Pendo · Cortex &amp; Geofusion · Jan–Jun 2026. Views = todas as exibições do guia. Visitantes = usuários únicos que o viram.</p>
+  <p class="pendo-note" style="margin-top:4px;">Fonte: Pendo · Segmento "Usuários Finais PR - Totais" · Jan–Jun 2026. Views = visitantes únicos do segmento que viram o guia. ✓ = completaram.</p>
 
 </div><!-- /tab-pendo -->
 
@@ -1241,12 +1241,12 @@
     // Dados por cliente (Jan–Jun 2026, extraídos via Pendo MCP)
     // guias: nps_pr | satisfacao | csat | filtros | academy | summit | total_views | guias_unicos
     const PENDO_CLIENTES = [
-      { nome: 'Volvo',         nps_pr: {v:14,c:0}, satisfacao: {v:2,c:1},  csat: {v:4,c:0},  filtros: {v:8,c:5},  academy: {v:4,c:0},  total: 54, unicos: 8 },
-      { nome: 'BHP',           nps_pr: {v:2,c:1},  satisfacao: {v:4,c:1},  csat: {v:1,c:0},  filtros: {v:5,c:4},  academy: {v:3,c:0},  total: 37, unicos: 7 },
-      { nome: 'Tramontina',    nps_pr: {v:0,c:0},  satisfacao: {v:10,c:1}, csat: {v:6,c:0},  filtros: {v:3,c:3},  academy: {v:11,c:0}, total: 52, unicos: 7 },
+      { nome: 'Volvo',         nps_pr: {v:3,c:0},  satisfacao: {v:2,c:1},  csat: {v:2,c:0},  filtros: {v:3,c:5},  academy: {v:4,c:0},  total: 21, unicos: 8 },
+      { nome: 'BHP',           nps_pr: {v:1,c:1},  satisfacao: {v:2,c:1},  csat: {v:1,c:0},  filtros: {v:3,c:4},  academy: {v:3,c:0},  total: 13, unicos: 7 },
+      { nome: 'Tramontina',    nps_pr: {v:0,c:0},  satisfacao: {v:5,c:1},  csat: {v:4,c:0},  filtros: {v:2,c:3},  academy: {v:8,c:0},  total: 28, unicos: 7 },
       { nome: 'Unilever Foods',nps_pr: {v:0,c:0},  satisfacao: {v:8,c:0},  csat: {v:3,c:0},  filtros: {v:4,c:3},  academy: {v:4,c:0},  total: 28, unicos: 7 },
-      { nome: 'Skechers',      nps_pr: {v:0,c:0},  satisfacao: {v:1,c:1},  csat: {v:0,c:0},  filtros: {v:3,c:2},  academy: {v:3,c:0},  total: 7,  unicos: 3 },
-      { nome: 'Vulcabras',     nps_pr: {v:0,c:0},  satisfacao: {v:0,c:0},  csat: {v:5,c:1},  filtros: {v:2,c:2},  academy: {v:0,c:0},  total: 13, unicos: 4 },
+      { nome: 'Skechers',      nps_pr: {v:0,c:0},  satisfacao: {v:1,c:1},  csat: {v:0,c:0},  filtros: {v:2,c:2},  academy: {v:2,c:0},  total: 5,  unicos: 3 },
+      { nome: 'Vulcabras',     nps_pr: {v:0,c:0},  satisfacao: {v:0,c:0},  csat: {v:3,c:1},  filtros: {v:0,c:2},  academy: {v:0,c:0},  total: 6,  unicos: 3 },
     ];
 
     const clienteLabels = PENDO_CLIENTES.map(c => c.nome);
@@ -1320,12 +1320,12 @@
 
     // --- Cards de detalhe por cliente
     const guiasDetalhe = {
-      'Volvo':          [{n:'NPS PR',v:14,c:0},{n:'Cortex Summit\'26',v:9,c:0},{n:'Salvar/limpar filtros',v:8,c:5},{n:'Academy PR',v:4,c:0},{n:'CSAT Clipping',v:4,c:0},{n:'Satisfação produto',v:2,c:1},{n:'NPS PR - Agências',v:1,c:0}],
-      'BHP':            [{n:'Cortex Summit\'26',v:18,c:0},{n:'Salvar/limpar filtros',v:5,c:4},{n:'NPS PR - Agências',v:4,c:0},{n:'Satisfação produto',v:4,c:1},{n:'Academy PR',v:3,c:0},{n:'NPS PR',v:2,c:1},{n:'CSAT Clipping',v:1,c:0}],
-      'Tramontina':     [{n:'Cortex Summit\'26',v:16,c:0},{n:'Academy PR',v:11,c:0},{n:'Satisfação produto',v:10,c:1},{n:'CSAT Clipping',v:6,c:0},{n:'Pré-venda Summit',v:5,c:0},{n:'Salvar/limpar filtros',v:3,c:3},{n:'NPS PR - Agências',v:1,c:0}],
+      'Volvo':          [{n:'Academy PR',v:4,c:0},{n:'NPS PR',v:3,c:0},{n:'Salvar/limpar filtros',v:3,c:5},{n:'Cortex Summit\'26',v:3,c:0},{n:'Pré-venda Summit',v:3,c:0},{n:'Satisfação produto',v:2,c:1},{n:'CSAT Clipping',v:2,c:0},{n:'NPS PR - Agências',v:1,c:0}],
+      'BHP':            [{n:'Academy PR',v:3,c:0},{n:'Salvar/limpar filtros',v:3,c:4},{n:'Satisfação produto',v:2,c:1},{n:'Cortex Summit\'26',v:2,c:0},{n:'NPS PR - Agências',v:1,c:0},{n:'NPS PR',v:1,c:1},{n:'CSAT Clipping',v:1,c:0}],
+      'Tramontina':     [{n:'Academy PR',v:8,c:0},{n:'Satisfação produto',v:5,c:1},{n:'Cortex Summit\'26',v:4,c:0},{n:'CSAT Clipping',v:4,c:0},{n:'Pré-venda Summit',v:4,c:0},{n:'Salvar/limpar filtros',v:2,c:3},{n:'NPS PR - Agências',v:1,c:0}],
       'Unilever Foods': [{n:'Satisfação produto',v:8,c:0},{n:'Cortex Summit\'26',v:5,c:0},{n:'Academy PR',v:4,c:0},{n:'Salvar/limpar filtros',v:4,c:3},{n:'CSAT Clipping',v:3,c:0},{n:'NPS PR - Agências',v:2,c:0},{n:'Pré-venda Summit',v:2,c:0}],
-      'Skechers':       [{n:'Academy PR',v:3,c:0},{n:'Salvar/limpar filtros',v:3,c:2},{n:'Satisfação produto',v:1,c:1}],
-      'Vulcabras':      [{n:'CSAT Clipping',v:5,c:1},{n:'Cortex Summit\'26',v:5,c:0},{n:'Salvar/limpar filtros',v:2,c:2},{n:'Pré-venda Summit',v:1,c:0}],
+      'Skechers':       [{n:'Academy PR',v:2,c:0},{n:'Salvar/limpar filtros',v:2,c:2},{n:'Satisfação produto',v:1,c:1}],
+      'Vulcabras':      [{n:'CSAT Clipping',v:3,c:1},{n:'Cortex Summit\'26',v:2,c:0},{n:'Pré-venda Summit',v:1,c:0}],
     };
 
     const npsOnboard = { 'Volvo': 10, 'BHP': 10, 'Tramontina': 6, 'Unilever Foods': 8, 'Skechers': 9, 'Vulcabras': 1 };
