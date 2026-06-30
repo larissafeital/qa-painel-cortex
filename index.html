@@ -772,7 +772,24 @@
   <div class="pendo-section-title">Detalhe completo por cliente</div>
   <div id="pendoClienteCards" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px;"></div>
 
-  <p class="pendo-note" style="margin-top:4px;">Fonte: Pendo · Segmento "Usuários Finais PR - Totais" · Jan–Jun 2026. Views = visitantes únicos do segmento que viram o guia. ✓ = completaram.</p>
+  <!-- PÁGINAS ESTRATÉGICAS -->
+  <div class="pendo-section-title">Uso de Páginas Estratégicas · Jan–Jun 2026</div>
+  <div class="pendo-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Flash Report (Quanti)</th>
+          <th>Benchmark do Setor</th>
+          <th>Relatório Mensal</th>
+          <th>Reputação da Marca</th>
+        </tr>
+      </thead>
+      <tbody id="pendoPageTableBody"></tbody>
+    </table>
+  </div>
+
+  <p class="pendo-note" style="margin-top:4px;">Fonte: Pendo · Segmento "Usuários Finais PR - Totais" · Jan–Jun 2026. Guias: vis = visitantes únicos (c=cli / a=age). ✓ = completaram. Páginas: eventos totais · visitantes únicos.</p>
 
 </div><!-- /tab-pendo -->
 
@@ -1238,15 +1255,15 @@
   // ── PENDO CHARTS ─────────────────────────────────────────────────────────
   function buildPendoCharts() {
 
-    // Dados por cliente (Jan–Jun 2026, extraídos via Pendo MCP)
-    // guias: nps_pr | satisfacao | csat | filtros | academy | summit | total_views | guias_unicos
+    // Dados por cliente · segmento "Usuários Finais PR - Clientes" (cli) e "PR - Agências" (age)
+    // guias: {cli, age, c}  |  Unilever Foods: sem segmentação disponível {v, c}
     const PENDO_CLIENTES = [
-      { nome: 'Volvo',         nps_pr: {v:3,c:0},  satisfacao: {v:2,c:1},  csat: {v:2,c:0},  filtros: {v:3,c:5},  academy: {v:4,c:0},  total: 21, unicos: 8 },
-      { nome: 'BHP',           nps_pr: {v:1,c:1},  satisfacao: {v:2,c:1},  csat: {v:1,c:0},  filtros: {v:3,c:4},  academy: {v:3,c:0},  total: 13, unicos: 7 },
-      { nome: 'Tramontina',    nps_pr: {v:0,c:0},  satisfacao: {v:5,c:1},  csat: {v:4,c:0},  filtros: {v:2,c:3},  academy: {v:8,c:0},  total: 28, unicos: 7 },
-      { nome: 'Unilever Foods',nps_pr: {v:0,c:0},  satisfacao: {v:8,c:0},  csat: {v:3,c:0},  filtros: {v:4,c:3},  academy: {v:4,c:0},  total: 28, unicos: 7 },
-      { nome: 'Skechers',      nps_pr: {v:0,c:0},  satisfacao: {v:1,c:1},  csat: {v:0,c:0},  filtros: {v:2,c:2},  academy: {v:2,c:0},  total: 5,  unicos: 3 },
-      { nome: 'Vulcabras',     nps_pr: {v:0,c:0},  satisfacao: {v:0,c:0},  csat: {v:3,c:1},  filtros: {v:0,c:2},  academy: {v:0,c:0},  total: 6,  unicos: 3 },
+      { nome: 'Volvo',         nps_pr: {cli:1,age:2,c:0}, satisfacao: {cli:1,age:1,c:1}, csat: {cli:0,age:2,c:0}, filtros: {cli:0,age:3,c:5}, academy: {cli:1,age:3,c:0}, total: 21, unicos: 8 },
+      { nome: 'BHP',           nps_pr: {cli:1,age:0,c:1}, satisfacao: {cli:1,age:1,c:1}, csat: {cli:1,age:0,c:0}, filtros: {cli:1,age:2,c:4}, academy: {cli:1,age:2,c:0}, total: 13, unicos: 7 },
+      { nome: 'Tramontina',    nps_pr: {cli:0,age:0,c:0}, satisfacao: {cli:4,age:1,c:1}, csat: {cli:3,age:1,c:0}, filtros: {cli:1,age:1,c:3}, academy: {cli:7,age:1,c:0}, total: 28, unicos: 7 },
+      { nome: 'Unilever Foods',nps_pr: {v:0,c:0},         satisfacao: {v:8,c:0},         csat: {v:3,c:0},         filtros: {v:4,c:3},         academy: {v:4,c:0},         total: 28, unicos: 7 },
+      { nome: 'Skechers',      nps_pr: {cli:0,age:0,c:0}, satisfacao: {cli:0,age:1,c:1}, csat: {cli:0,age:0,c:0}, filtros: {cli:0,age:2,c:2}, academy: {cli:0,age:2,c:0}, total: 5,  unicos: 3 },
+      { nome: 'Vulcabras',     nps_pr: {cli:0,age:0,c:0}, satisfacao: {cli:0,age:0,c:0}, csat: {cli:0,age:0,c:1}, filtros: {cli:0,age:0,c:2}, academy: {cli:0,age:0,c:0}, total: 6,  unicos: 3 },
     ];
 
     const clienteLabels = PENDO_CLIENTES.map(c => c.nome);
@@ -1298,11 +1315,15 @@
 
     // --- Tabela cross: cliente x guia
     function guiaCell(g) {
-      if (!g || g.v === 0) return '<td style="color:var(--text-muted);text-align:center">—</td>';
+      const total = g.cli !== undefined ? g.cli + g.age : (g.v || 0);
+      if (!g || total === 0) return '<td style="color:var(--text-muted);text-align:center">—</td>';
       const badge = g.c > 0
         ? `<span style="display:inline-block;background:#DCFCE7;color:#166534;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;margin-left:4px">✓</span>`
         : '';
-      return `<td style="text-align:center"><span style="font-weight:600">${g.v}</span>${badge}</td>`;
+      const split = g.cli !== undefined
+        ? `<div style="font-size:10px;color:var(--text-muted);margin-top:1px">${g.cli}c·${g.age}a</div>`
+        : '';
+      return `<td style="text-align:center"><span style="font-weight:600">${total}</span>${badge}${split}</td>`;
     }
 
     const tbody = document.getElementById('pendoClienteTableBody');
@@ -1320,26 +1341,47 @@
 
     // --- Cards de detalhe por cliente
     const guiasDetalhe = {
-      'Volvo':          [{n:'Academy PR',v:4,c:0},{n:'NPS PR',v:3,c:0},{n:'Salvar/limpar filtros',v:3,c:5},{n:'Cortex Summit\'26',v:3,c:0},{n:'Pré-venda Summit',v:3,c:0},{n:'Satisfação produto',v:2,c:1},{n:'CSAT Clipping',v:2,c:0},{n:'NPS PR - Agências',v:1,c:0}],
-      'BHP':            [{n:'Academy PR',v:3,c:0},{n:'Salvar/limpar filtros',v:3,c:4},{n:'Satisfação produto',v:2,c:1},{n:'Cortex Summit\'26',v:2,c:0},{n:'NPS PR - Agências',v:1,c:0},{n:'NPS PR',v:1,c:1},{n:'CSAT Clipping',v:1,c:0}],
-      'Tramontina':     [{n:'Academy PR',v:8,c:0},{n:'Satisfação produto',v:5,c:1},{n:'Cortex Summit\'26',v:4,c:0},{n:'CSAT Clipping',v:4,c:0},{n:'Pré-venda Summit',v:4,c:0},{n:'Salvar/limpar filtros',v:2,c:3},{n:'NPS PR - Agências',v:1,c:0}],
+      'Volvo':          [{n:'Academy PR',cli:1,age:3,c:0},{n:'NPS PR',cli:1,age:2,c:0},{n:'Salvar/limpar filtros',cli:0,age:3,c:5},{n:'Cortex Summit\'26',cli:1,age:2,c:0},{n:'Pré-venda Summit',cli:1,age:2,c:0},{n:'Satisfação produto',cli:1,age:1,c:1},{n:'CSAT Clipping',cli:0,age:2,c:0},{n:'NPS PR - Agências',cli:0,age:1,c:0}],
+      'BHP':            [{n:'Academy PR',cli:1,age:2,c:0},{n:'Salvar/limpar filtros',cli:1,age:2,c:4},{n:'Satisfação produto',cli:1,age:1,c:1},{n:'Cortex Summit\'26',cli:1,age:1,c:0},{n:'NPS PR - Agências',cli:0,age:1,c:0},{n:'NPS PR',cli:1,age:0,c:1},{n:'CSAT Clipping',cli:1,age:0,c:0}],
+      'Tramontina':     [{n:'Academy PR',cli:7,age:1,c:0},{n:'Satisfação produto',cli:4,age:1,c:1},{n:'Cortex Summit\'26',cli:3,age:1,c:0},{n:'CSAT Clipping',cli:3,age:1,c:0},{n:'Pré-venda Summit',cli:3,age:1,c:0},{n:'Salvar/limpar filtros',cli:1,age:1,c:3},{n:'NPS PR - Agências',cli:0,age:1,c:0}],
       'Unilever Foods': [{n:'Satisfação produto',v:8,c:0},{n:'Cortex Summit\'26',v:5,c:0},{n:'Academy PR',v:4,c:0},{n:'Salvar/limpar filtros',v:4,c:3},{n:'CSAT Clipping',v:3,c:0},{n:'NPS PR - Agências',v:2,c:0},{n:'Pré-venda Summit',v:2,c:0}],
-      'Skechers':       [{n:'Academy PR',v:2,c:0},{n:'Salvar/limpar filtros',v:2,c:2},{n:'Satisfação produto',v:1,c:1}],
-      'Vulcabras':      [{n:'CSAT Clipping',v:3,c:1},{n:'Cortex Summit\'26',v:2,c:0},{n:'Pré-venda Summit',v:1,c:0}],
+      'Skechers':       [{n:'Academy PR',cli:0,age:2,c:0},{n:'Salvar/limpar filtros',cli:0,age:2,c:2},{n:'Satisfação produto',cli:0,age:1,c:1}],
+      'Vulcabras':      [{n:'CSAT Clipping',cli:0,age:0,c:1},{n:'Cortex Summit\'26',cli:0,age:0,c:0},{n:'Pré-venda Summit',cli:0,age:0,c:0}],
     };
 
     const npsOnboard = { 'Volvo': 10, 'BHP': 10, 'Tramontina': 6, 'Unilever Foods': 8, 'Skechers': 9, 'Vulcabras': 1 };
     const cardCls    = { 'Volvo': 'promotor', 'BHP': 'promotor', 'Tramontina': 'detrator', 'Unilever Foods': 'inocuo', 'Skechers': 'promotor', 'Vulcabras': 'detrator' };
     const accentMap  = ['rgba(139,45,191,0.18)','rgba(146,27,69,0.18)','rgba(0,77,58,0.12)','rgba(144,204,229,0.35)','rgba(245,160,32,0.18)','rgba(214,74,23,0.15)'];
 
+    // --- Tabela de páginas estratégicas
+    const PENDO_PAGES = {
+      'Volvo':          { flash: {ev:149,vis:4}, bench: {ev:57,vis:4},  rel: null, reput: null },
+      'BHP':            { flash: {ev:25, vis:3}, bench: null,            rel: null, reput: null },
+      'Tramontina':     { flash: {ev:80, vis:9}, bench: {ev:28,vis:7},  rel: null, reput: null },
+      'Unilever Foods': { flash: null,           bench: null,            rel: null, reput: null },
+      'Skechers':       { flash: null,           bench: null,            rel: null, reput: null },
+      'Vulcabras':      { flash: {ev:90, vis:5}, bench: null,            rel: null, reput: null },
+    };
+    const pageCell = p => p
+      ? `<td style="text-align:center"><strong>${p.ev}</strong> eventos<div style="font-size:10px;color:var(--text-muted)">${p.vis} visitantes</div></td>`
+      : '<td style="color:var(--text-muted);text-align:center">—</td>';
+    document.getElementById('pendoPageTableBody').innerHTML = CLIENTS.map(c => {
+      const d = PENDO_PAGES[c] || {};
+      return `<tr><td style="font-weight:700">${c}</td>${pageCell(d.flash)}${pageCell(d.bench)}${pageCell(d.rel)}${pageCell(d.reput)}</tr>`;
+    }).join('');
+
     const wrap = document.getElementById('pendoClienteCards');
     wrap.innerHTML = PENDO_CLIENTES.map((c, i) => {
       const guias = guiasDetalhe[c.nome] || [];
       const rows = guias.map(g => {
         const compBadge = g.c > 0 ? `<span style="background:#DCFCE7;color:#166534;font-size:9px;font-weight:700;padding:1px 5px;border-radius:8px;margin-left:4px">✓ ${g.c}x</span>` : '';
+        const total = g.cli !== undefined ? g.cli + g.age : (g.v || 0);
+        const splitTag = (g.cli !== undefined && (g.cli > 0 || g.age > 0))
+          ? `<span style="font-size:10px;color:var(--text-muted);margin-left:5px">${g.cli}cli·${g.age}age</span>`
+          : '';
         return `<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #F1F5F9;font-size:12px;">
           <span style="color:var(--text-body)">${g.n}${compBadge}</span>
-          <span style="font-weight:700;color:var(--text-primary)">${g.v} view${g.v !== 1 ? 's' : ''}</span>
+          <span style="font-weight:700;color:var(--text-primary)">${total}vis${splitTag}</span>
         </div>`;
       }).join('');
       return `<div style="background:white;border-radius:14px;padding:20px 22px;box-shadow:0 1px 4px rgba(0,0,0,0.07);border-top:4px solid ${accentMap[i].replace('0.18','1').replace('0.12','1').replace('0.35','1').replace('0.15','1')};">
