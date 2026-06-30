@@ -820,7 +820,7 @@
     </table>
   </div>
 
-  <p class="pendo-note" style="margin-top:4px;">Fonte: Vitally · Health scores calculados sobre categorias ativas por conta. Skechers ainda não possui conta ativa no Vitally.</p>
+  <p class="pendo-note" style="margin-top:4px;">Fonte: Vitally · Health scores calculados sobre categorias ativas por conta. Skechers rastreada sob a conta "Buzzing PR" (agência gestora). NPS ausente = nenhuma resposta registrada no período.</p>
 
 </div><!-- /tab-vitally -->
 
@@ -1471,7 +1471,14 @@
       { n: 'Engagement',    s:  0, w: 20 },
       { n: 'Product usage', s: 10, w: 20 },
     ]},
-    { nome: 'Skechers', score: null, categories: [] },
+    { nome: 'Skechers', score: 6.47, categories: [
+    { n: 'CSM Pulse',     s: 10, w: 15 },
+    { n: 'Support',       s: 10, w: 20 },
+    { n: 'NPS',           s: null, w: 15 },
+    { n: 'Inadimplência', s: 10, w: 10 },
+    { n: 'Engagement',    s:  0, w: 20 },
+    { n: 'Product usage', s:  5, w: 20 },
+  ]},
   ];
 
   function vScoreColor(s) {
