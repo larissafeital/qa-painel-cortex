@@ -356,6 +356,8 @@
     .pendo-tag-red    { background: var(--nps-detrator-bg); color: var(--nps-detrator); }
     .pendo-tag-yellow { background: var(--brand-orange-light); color: var(--brand-orange-dark); }
     .pendo-tag-green  { background: var(--nps-promotor-bg); color: var(--nps-promotor); }
+    .pendo-tag-gray   { background: #F1F5F9; color: #64748B; }
+    .pendo-tag-purple { background: #EDE9FE; color: #5B21B6; }
     .pendo-tag-purple { background: var(--brand-purple-light); color: var(--brand-purple); }
     .pendo-section-title {
       font-size: 15px; font-weight: 700; color: var(--text-primary);
@@ -399,6 +401,7 @@
 <div class="tab-nav">
   <button class="tab-btn active" onclick="switchTab('qa', this)">QA Onboarding</button>
   <button class="tab-btn" onclick="switchTab('pendo', this)">Usabilidade · Pendo</button>
+  <button class="tab-btn" onclick="switchTab('vitally', this)">Saúde · Vitally</button>
 </div>
 
 <div id="tab-qa" class="tab-panel active">
@@ -792,6 +795,34 @@
   <p class="pendo-note" style="margin-top:4px;">Fonte: Pendo · Segmento "Usuários Finais PR - Totais" · Jan–Jun 2026. Guias: vis = visitantes únicos (c=cli / a=age). ✓ = completaram. Páginas: eventos totais · visitantes únicos.</p>
 
 </div><!-- /tab-pendo -->
+
+<!-- ══════════════════════════════════════════════════ VITALLY TAB -->
+<div id="tab-vitally" class="tab-panel">
+
+  <div class="pendo-cards-row" id="vitallyScoreCards"></div>
+
+  <div class="pendo-section-title" style="margin-top:8px">Breakdown por Categoria · Health Score Vitally</div>
+  <div class="pendo-table-wrap">
+    <table id="vitallyTable">
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>CSM Pulse<br><span style="font-weight:400;font-size:10px">peso 15%</span></th>
+          <th>Support<br><span style="font-weight:400;font-size:10px">peso 20%</span></th>
+          <th>NPS<br><span style="font-weight:400;font-size:10px">peso 15%</span></th>
+          <th>Inadimplência<br><span style="font-weight:400;font-size:10px">peso 10%</span></th>
+          <th>Engagement<br><span style="font-weight:400;font-size:10px">peso 20%</span></th>
+          <th>Product usage<br><span style="font-weight:400;font-size:10px">peso 20%</span></th>
+          <th>Score geral</th>
+        </tr>
+      </thead>
+      <tbody id="vitallyTableBody"></tbody>
+    </table>
+  </div>
+
+  <p class="pendo-note" style="margin-top:4px;">Fonte: Vitally · Health scores calculados sobre categorias ativas por conta. Skechers ainda não possui conta ativa no Vitally.</p>
+
+</div><!-- /tab-vitally -->
 
 <!-- MODAL ETAPA -->
 <div id="etapaModal" class="etapa-modal-overlay" onclick="closeEtapaModal(event)">
@@ -1397,6 +1428,115 @@
       </div>`;
     }).join('');
   }
+
+  // ── VITALLY HEALTH SCORES ────────────────────────────────────────────────
+  const VITALLY_HEALTH = [
+    { nome: 'Unilever Foods', score: 9.25, categories: [
+      { n: 'CSM Pulse',     s: 10, w: 15 },
+      { n: 'Support',       s: 10, w: 20 },
+      { n: 'NPS',           s:  5, w: 15 },
+      { n: 'Inadimplência', s: 10, w: 10 },
+      { n: 'Engagement',    s: 10, w: 20 },
+      { n: 'Product usage', s: 10, w: 20 },
+    ]},
+    { nome: 'BHP', score: 6.47, categories: [
+      { n: 'CSM Pulse',     s: 10, w: 15 },
+      { n: 'Support',       s: 10, w: 20 },
+      { n: 'NPS',           s: null, w: 15 },
+      { n: 'Inadimplência', s: 10, w: 10 },
+      { n: 'Engagement',    s:  0, w: 20 },
+      { n: 'Product usage', s:  5, w: 20 },
+    ]},
+    { nome: 'Tramontina', score: 5.50, categories: [
+      { n: 'CSM Pulse',     s:  0, w: 15 },
+      { n: 'Support',       s:  5, w: 20 },
+      { n: 'NPS',           s: 10, w: 15 },
+      { n: 'Inadimplência', s: 10, w: 10 },
+      { n: 'Engagement',    s:  0, w: 20 },
+      { n: 'Product usage', s: 10, w: 20 },
+    ]},
+    { nome: 'Vulcabras', score: 5.88, categories: [
+      { n: 'CSM Pulse',     s:  0, w: 15 },
+      { n: 'Support',       s: 10, w: 20 },
+      { n: 'NPS',           s: null, w: 15 },
+      { n: 'Inadimplência', s: 10, w: 10 },
+      { n: 'Engagement',    s:  0, w: 20 },
+      { n: 'Product usage', s: 10, w: 20 },
+    ]},
+    { nome: 'Volvo', score: 4.71, categories: [
+      { n: 'CSM Pulse',     s:  0, w: 15 },
+      { n: 'Support',       s:  5, w: 20 },
+      { n: 'NPS',           s: null, w: 15 },
+      { n: 'Inadimplência', s: 10, w: 10 },
+      { n: 'Engagement',    s:  0, w: 20 },
+      { n: 'Product usage', s: 10, w: 20 },
+    ]},
+    { nome: 'Skechers', score: null, categories: [] },
+  ];
+
+  function vScoreColor(s) {
+    if (s === null) return { bg: '#F1F5F9', fg: '#94A3B8' };
+    if (s >= 8)  return { bg: '#DCFCE7', fg: '#166534' };
+    if (s >= 4)  return { bg: '#FEF9C3', fg: '#854D0E' };
+    return { bg: '#FEE2E2', fg: '#991B1B' };
+  }
+
+  function buildVitallySection() {
+    const ALL_CATS = ['CSM Pulse', 'Support', 'NPS', 'Inadimplência', 'Engagement', 'Product usage'];
+
+    // Score cards (top row)
+    document.getElementById('vitallyScoreCards').innerHTML = VITALLY_HEALTH.map(c => {
+      const col = vScoreColor(c.score);
+      const scoreLabel = c.score !== null ? c.score.toFixed(2) : '—';
+      const tag = c.score === null ? 'Não disponível'
+                : c.score >= 8   ? 'Saudável'
+                : c.score >= 5   ? 'Em atenção'
+                : 'Em risco';
+      const tagCls = c.score === null ? 'pendo-tag-gray'
+                   : c.score >= 8    ? 'pendo-tag-green'
+                   : c.score >= 5    ? 'pendo-tag-yellow'
+                   : 'pendo-tag-red';
+      return `<div class="pendo-card">
+        <div class="pendo-card-label">${c.nome}</div>
+        <div class="pendo-card-value" style="color:${col.fg}">${scoreLabel}</div>
+        <div class="pendo-card-sub">Health score Vitally</div>
+        <span class="pendo-card-tag ${tagCls}">${tag}</span>
+      </div>`;
+    }).join('');
+
+    // Breakdown table
+    const catMap = name => ALL_CATS.indexOf(name);
+    document.getElementById('vitallyTableBody').innerHTML = VITALLY_HEALTH.map(c => {
+      if (!c.categories.length) {
+        return `<tr><td><strong>${c.nome}</strong></td>${ALL_CATS.map(() => '<td style="text-align:center;color:var(--text-muted)">—</td>').join('')}<td style="text-align:center;color:var(--text-muted)">—</td></tr>`;
+      }
+      const byName = {};
+      c.categories.forEach(cat => byName[cat.n] = cat);
+      const cells = ALL_CATS.map(cn => {
+        const cat = byName[cn];
+        if (!cat || cat.s === null) return '<td style="text-align:center;color:var(--text-muted)">—</td>';
+        const col = vScoreColor(cat.s);
+        return `<td style="text-align:center"><span style="display:inline-block;background:${col.bg};color:${col.fg};font-weight:700;padding:3px 10px;border-radius:8px;font-size:12px">${cat.s}</span></td>`;
+      });
+      const scoreCol = vScoreColor(c.score);
+      return `<tr>
+        <td><strong>${c.nome}</strong></td>
+        ${cells.join('')}
+        <td style="text-align:center"><span style="display:inline-block;background:${scoreCol.bg};color:${scoreCol.fg};font-weight:800;padding:3px 12px;border-radius:8px;font-size:13px">${c.score.toFixed(2)}</span></td>
+      </tr>`;
+    }).join('');
+  }
+
+  // Trigger on tab switch
+  let vitallyBuilt = false;
+  const _origSwitchTab = switchTab;
+  switchTab = function(id, btn) {
+    _origSwitchTab(id, btn);
+    if (id === 'vitally' && !vitallyBuilt) {
+      buildVitallySection();
+      vitallyBuilt = true;
+    }
+  };
 </script>
 
 </body>
