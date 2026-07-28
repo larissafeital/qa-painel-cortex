@@ -285,6 +285,12 @@
       padding-top: 10px;
     }
     .voz-card.voz-collapsed { display: none; }
+    #mainTableBody tr.row-collapsed { display: none; }
+    #mainTableBody tr.month-header-row td {
+      background: var(--bg-page); font-weight: 700; font-size: 11px;
+      text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted);
+      padding: 8px 12px;
+    }
 
     /* ── RENOVAÇÃO & EVOLUÇÃO ── */
     .renov-section { margin-bottom: 20px; }
@@ -1064,8 +1070,15 @@
 </div>
 
 <!-- TABLE -->
-<div class="voz-header">
-  <div class="voz-title">Tabela Completa de Indicadores</div>
+<div class="voz-header" style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+  <div>
+    <div class="voz-title">Tabela Completa de Indicadores</div>
+    <span class="chart-sub" style="margin:0;" id="tableSubtitle"></span>
+  </div>
+  <div style="display:flex;gap:8px;">
+    <button id="tableGroupBtn" onclick="toggleTableGroupByMonth(this)" style="background:var(--brand-purple-light);color:var(--brand-purple);border:none;border-radius:20px;padding:8px 18px;font-size:12px;font-weight:700;cursor:pointer;">Dividir por mês</button>
+    <button id="tableToggleBtn" onclick="toggleTableRows(this)" style="background:var(--brand-purple-light);color:var(--brand-purple);border:none;border-radius:20px;padding:8px 18px;font-size:12px;font-weight:700;cursor:pointer;">Ver mais ▾</button>
+  </div>
 </div>
 <div class="table-card">
   <table>
@@ -1083,8 +1096,8 @@
         <th>QAs</th>
       </tr>
     </thead>
-    <tbody>
-      <tr>
+    <tbody id="mainTableBody">
+      <tr data-date="2026-05-07">
         <td><strong>Volvo</strong></td>
         <td><span class="tag t-onboarding">Onboarding</span></td>
         <td>07/05/2026</td>
@@ -1096,7 +1109,7 @@
         <td>21/12/2026</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-05-07">
         <td><strong>Tramontina</strong></td>
         <td><span class="tag t-onboarding">Onboarding</span></td>
         <td>07/05/2026</td>
@@ -1108,7 +1121,7 @@
         <td>08/02/2027</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-05-20">
         <td><strong>BHP</strong></td>
         <td><span class="tag t-onboarding">Onboarding</span></td>
         <td>20/05/2026</td>
@@ -1120,7 +1133,7 @@
         <td>23/03/2027</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-06-01">
         <td><strong>Unilever Foods</strong></td>
         <td><span class="tag t-onboarding">Onboarding</span></td>
         <td>01/06/2026</td>
@@ -1132,7 +1145,7 @@
         <td>22/01/2027</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-06-17">
         <td><strong>Skechers</strong></td>
         <td><span class="tag t-onboarding">Onboarding</span></td>
         <td>17/06/2026</td>
@@ -1144,7 +1157,7 @@
         <td>08/02/2027</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-06-19">
         <td><strong>Vulcabras</strong></td>
         <td><span class="tag t-onboarding">Onboarding</span></td>
         <td>19/06/2026</td>
@@ -1156,7 +1169,7 @@
         <td>08/12/2026</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-03-09">
         <td><strong>Insper</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>09/03/2026</td>
@@ -1168,7 +1181,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-03-20">
         <td><strong>Cruzeiro do Sul</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>20/03/2026</td>
@@ -1180,7 +1193,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-03-25">
         <td><strong>Ajinomoto</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>25/03/2026</td>
@@ -1192,7 +1205,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-04-08">
         <td><strong>Sicredi</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>08/04/2026</td>
@@ -1204,7 +1217,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-04-14">
         <td><strong>BTG Pactual</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>14/04/2026</td>
@@ -1216,7 +1229,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-04-14">
         <td><strong>Banco PAN</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>14/04/2026</td>
@@ -1228,7 +1241,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-04-17">
         <td><strong>Iguatemi</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>17/04/2026</td>
@@ -1240,7 +1253,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-04-22">
         <td><strong>BYD</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>22/04/2026</td>
@@ -1252,7 +1265,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-04-23">
         <td><strong>Intelbras</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>23/04/2026</td>
@@ -1264,7 +1277,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-04-24">
         <td><strong>VLI</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>24/04/2026</td>
@@ -1276,7 +1289,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-04-28">
         <td><strong>Amaggi</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>28/04/2026</td>
@@ -1288,7 +1301,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-05-18">
         <td><strong>Unilever Beauty</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>18/05/2026</td>
@@ -1300,7 +1313,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-05-19">
         <td><strong>Thales</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>19/05/2026</td>
@@ -1312,7 +1325,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-03-17">
         <td><strong>CTG Brasil</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>17/03/2026</td>
@@ -1324,7 +1337,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-04-02">
         <td><strong>EMAE</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>02/04/2026</td>
@@ -1336,7 +1349,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-04-11">
         <td><strong>KPMG</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>11/04/2026</td>
@@ -1348,7 +1361,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-04-15">
         <td><strong>Iretail</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>15/04/2026</td>
@@ -1360,7 +1373,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-04-17">
         <td><strong>Carrefour</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>17/04/2026</td>
@@ -1372,7 +1385,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-04-22">
         <td><strong>JTI</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>22/04/2026</td>
@@ -1384,7 +1397,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-04-23">
         <td><strong>CCEE</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>23/04/2026</td>
@@ -1396,7 +1409,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-04-29">
         <td><strong>Alpargatas</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>29/04/2026</td>
@@ -1408,7 +1421,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-04-30">
         <td><strong>PetroReconcavo</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>30/04/2026</td>
@@ -1420,7 +1433,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-05-08">
         <td><strong>Cubo Itaú</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>08/05/2026</td>
@@ -1432,7 +1445,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-06-15">
         <td><strong>Ancar Ivanhoe</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>15/06/2026</td>
@@ -1444,7 +1457,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-03-30">
         <td><strong>Grandfood</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>30/03/2026</td>
@@ -1456,7 +1469,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-04-07">
         <td><strong>Cesbe</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>07/04/2026</td>
@@ -1468,7 +1481,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-03-30">
         <td><strong>Electrolux</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>30/03/2026</td>
@@ -1480,7 +1493,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-04-06">
         <td><strong>Mondelez</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>06/04/2026</td>
@@ -1492,7 +1505,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-04-17">
         <td><strong>Organon</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>17/04/2026</td>
@@ -1504,7 +1517,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-04-17">
         <td><strong>Americanas</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>17/04/2026</td>
@@ -1516,7 +1529,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-04-22">
         <td><strong>Ultrapar</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>22/04/2026</td>
@@ -1528,7 +1541,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-04-29">
         <td><strong>Yara</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>29/04/2026</td>
@@ -1540,7 +1553,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-04-30">
         <td><strong>Sendas</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>30/04/2026</td>
@@ -1552,7 +1565,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-05-19">
         <td><strong>ZF Automotive</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>19/05/2026</td>
@@ -1564,7 +1577,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-05-21">
         <td><strong>Heineken</strong></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>21/05/2026</td>
@@ -1576,7 +1589,7 @@
         <td>—</td>
         <td>1</td>
       </tr>
-      <tr>
+      <tr data-date="2026-07-02">
         <td><strong>Yara</strong> <span style="font-size:10px;color:var(--text-muted);font-weight:600">(2º QA)</span></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>02/07/2026</td>
@@ -1793,6 +1806,82 @@
       ? `Mostrando os ${cards.length} QAs`
       : `Mostrando os ${VOZ_VISIBLE_COUNT} QAs mais recentes de ${cards.length}`;
     btn.textContent = expanding ? 'Ver menos ▴' : 'Ver mais ▾';
+  }
+
+  // ── TABELA COMPLETA: ordena por data mais recente, top 3 + agrupar por mês ─
+  const TABLE_VISIBLE_COUNT = 3;
+  const MESES_EXT = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  let tableGroupedByMonth = false;
+
+  function tableMonthKey(dateStr) { return dateStr.slice(0, 7); }
+  function tableMonthLabel(dateStr) {
+    const [y, m] = dateStr.split('-');
+    return `${MESES_EXT[parseInt(m, 10) - 1]} de ${y}`;
+  }
+
+  (function () {
+    const tbody = document.getElementById('mainTableBody');
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+    rows.sort((a, b) => (b.dataset.date || '').localeCompare(a.dataset.date || ''));
+    rows.forEach((row, i) => {
+      tbody.appendChild(row);
+      if (i >= TABLE_VISIBLE_COUNT) row.classList.add('row-collapsed');
+    });
+    document.getElementById('tableSubtitle').textContent = `Mostrando os ${TABLE_VISIBLE_COUNT} QAs mais recentes de ${rows.length}`;
+  })();
+
+  function toggleTableRows(btn) {
+    if (tableGroupedByMonth) return; // no modo agrupado por mês todas as linhas já ficam visíveis
+    const tbody = document.getElementById('mainTableBody');
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+    const expanding = btn.textContent.includes('Ver mais');
+    rows.forEach((row, i) => {
+      if (i >= TABLE_VISIBLE_COUNT) row.classList.toggle('row-collapsed', !expanding);
+    });
+    document.getElementById('tableSubtitle').textContent = expanding
+      ? `Mostrando os ${rows.length} QAs`
+      : `Mostrando os ${TABLE_VISIBLE_COUNT} QAs mais recentes de ${rows.length}`;
+    btn.textContent = expanding ? 'Ver menos ▴' : 'Ver mais ▾';
+  }
+
+  function toggleTableGroupByMonth(btn) {
+    const tbody = document.getElementById('mainTableBody');
+    const toggleBtn = document.getElementById('tableToggleBtn');
+    tableGroupedByMonth = !tableGroupedByMonth;
+
+    // remove cabeçalhos de mês existentes
+    Array.from(tbody.querySelectorAll('tr.month-header-row')).forEach(r => r.remove());
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+    rows.sort((a, b) => (b.dataset.date || '').localeCompare(a.dataset.date || ''));
+
+    if (tableGroupedByMonth) {
+      let lastMonth = null;
+      rows.forEach(row => {
+        const key = tableMonthKey(row.dataset.date || '');
+        if (key !== lastMonth) {
+          const header = document.createElement('tr');
+          header.className = 'month-header-row';
+          const count = rows.filter(r => tableMonthKey(r.dataset.date || '') === key).length;
+          header.innerHTML = `<td colspan="10">${tableMonthLabel(row.dataset.date)} · ${count} QA${count !== 1 ? 's' : ''}</td>`;
+          tbody.appendChild(header);
+          lastMonth = key;
+        }
+        row.classList.remove('row-collapsed');
+        tbody.appendChild(row);
+      });
+      document.getElementById('tableSubtitle').textContent = `${rows.length} QAs agrupados por mês`;
+      toggleBtn.style.display = 'none';
+      btn.textContent = 'Visão em lista';
+    } else {
+      rows.forEach((row, i) => {
+        tbody.appendChild(row);
+        row.classList.toggle('row-collapsed', i >= TABLE_VISIBLE_COUNT);
+      });
+      toggleBtn.style.display = '';
+      toggleBtn.textContent = 'Ver mais ▾';
+      document.getElementById('tableSubtitle').textContent = `Mostrando os ${TABLE_VISIBLE_COUNT} QAs mais recentes de ${rows.length}`;
+      btn.textContent = 'Dividir por mês';
+    }
   }
 
   // ── blocos Onboarding: cor dinâmica pela média (regra NPS) ───────────
