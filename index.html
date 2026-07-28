@@ -1031,11 +1031,24 @@
 <!-- RENOVAÇÃO & EVOLUÇÃO -->
 <div class="renov-section">
   <div class="renov-section-title">Renovação & Evolução</div>
+
+  <!-- KPIs acionáveis de renovação -->
+  <div class="stat-row" id="renovKpiRow" style="margin-top:0;"></div>
+
   <div class="charts-row cols-2" style="margin-bottom:20px;">
     <div class="chart-card" style="padding:28px 28px 24px;">
-      <div class="chart-title">Dias para Renovação</div>
-      <div class="chart-sub">Contagem regressiva por cliente</div>
+      <div class="chart-title">Renovações mais urgentes</div>
+      <div class="chart-sub" id="renovChartSub">Top 8 · vencidas e mais próximas primeiro</div>
       <canvas id="chartRenovacao" height="170"></canvas>
+      <div style="text-align:center;margin-top:14px;">
+        <button id="renovTableBtn" onclick="toggleRenovTable(this)" style="background:var(--brand-purple-light);color:var(--brand-purple);border:none;border-radius:20px;padding:7px 16px;font-size:12px;font-weight:700;cursor:pointer;">Ver todas as renovações ▾</button>
+      </div>
+      <div id="renovTableWrap" style="display:none;margin-top:14px;max-height:320px;overflow-y:auto;">
+        <table style="width:100%;font-size:12px;">
+          <thead><tr><th style="text-align:left;padding:6px 8px;color:var(--text-placeholder);font-size:10px;text-transform:uppercase;">Cliente</th><th style="text-align:right;padding:6px 8px;color:var(--text-placeholder);font-size:10px;text-transform:uppercase;">Renovação</th><th style="text-align:right;padding:6px 8px;color:var(--text-placeholder);font-size:10px;text-transform:uppercase;">Status</th></tr></thead>
+          <tbody id="renovTableBody"></tbody>
+        </table>
+      </div>
     </div>
     <div class="chart-card" style="padding:28px 28px 24px;">
       <div class="chart-title">QAs Realizados por Cliente</div>
@@ -2078,20 +2091,46 @@
   }
   // DATA_RENOVACAO cobre todos os 41 clientes (via Vitally, buscado em 28/07/2026) — null = sem data cadastrada.
   // Datas já vencidas (nextRenewalDate no passado) são sinalizadas como "Vencida" em vez de escondidas.
+  const RENOV_TOP_N = 8;
   const renovPairsAll = CLIENTS.map((l, i) => ({ l, date: DATA_RENOVACAO[i] })).filter(p => p.date !== null);
-  const renovPairs = renovPairsAll.map(p => ({ ...p, d: daysUntil(p.date) })).sort((a, b) => a.d - b.d);
-  const diasRenov   = renovPairs.map(p => Math.max(p.d, 3)); // clampa pra dar visibilidade a bar de datas vencidas
+  const renovAll = renovPairsAll.map(p => ({ ...p, d: daysUntil(p.date) })).sort((a, b) => a.d - b.d);
+  const semDataRenov = CLIENTS.filter((l, i) => DATA_RENOVACAO[i] === null);
+
+  // -- KPIs acionáveis --
+  const vencidas   = renovAll.filter(p => p.d < 0);
+  const proximas90 = renovAll.filter(p => p.d >= 0 && p.d <= 90);
+  const depois90   = renovAll.filter(p => p.d > 90);
+  document.getElementById('renovKpiRow').innerHTML = `
+    <div class="stat-card">
+      <div class="stat-label">Vencidas — ação imediata</div>
+      <div class="stat-value" style="color:var(--nps-detrator);font-size:22px;">${vencidas.length}</div>
+      <div class="stat-sub">confirmar com comercial</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Renovam em até 90 dias</div>
+      <div class="stat-value" style="color:#D97706;font-size:22px;">${proximas90.length}</div>
+      <div class="stat-sub">priorizar contato</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Renovam depois de 90 dias</div>
+      <div class="stat-value val-green" style="font-size:22px;">${depois90.length}</div>
+      <div class="stat-sub">acompanhamento normal</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Sem data cadastrada</div>
+      <div class="stat-value" style="color:var(--text-muted);font-size:22px;">${semDataRenov.length}</div>
+      <div class="stat-sub">${semDataRenov.join(', ') || '—'}</div>
+    </div>`;
+
+  // -- Gráfico compacto: só as top N mais urgentes (vencidas + mais próximas) --
+  const renovPairs = renovAll.slice(0, RENOV_TOP_N);
+  const diasRenov   = renovPairs.map(p => Math.max(p.d, 3)); // clampa pra dar visibilidade à bar de datas vencidas
   const renovLabels = renovPairs.map(p => p.l);
   const renovDates  = renovPairs.map(p => p.date);
   const renovRealDays = renovPairs.map(p => p.d);
   const renovColors = renovRealDays.map(d =>
     d < 0 ? 'rgba(153,27,27,0.9)' : d > 180 ? 'rgba(0,77,58,0.8)' : d > 90 ? 'rgba(144,204,229,0.9)' : 'rgba(214,74,23,0.85)'
   );
-  const semDataRenov = CLIENTS.filter((l, i) => DATA_RENOVACAO[i] === null);
-  const renovCanvas = document.getElementById('chartRenovacao');
-  renovCanvas.parentElement.querySelector('.chart-sub').textContent =
-    `Contagem regressiva por cliente${semDataRenov.length ? ` · sem data cadastrada: ${semDataRenov.join(', ')}` : ''}`;
-  renovCanvas.height = Math.max(170, renovPairs.length * 24);
   new Chart('chartRenovacao', {
     type: 'bar',
     data: {
@@ -2101,7 +2140,6 @@
     options: {
       indexAxis: 'y',
       responsive: true,
-      maintainAspectRatio: false,
       layout: { padding: { right: 8 } },
       plugins: {
         legend: { display: false },
@@ -2120,6 +2158,21 @@
       }
     }
   });
+
+  // -- Tabela compacta (HTML puro, sem canvas) com TODAS as renovações, sob demanda --
+  document.getElementById('renovTableBody').innerHTML = renovAll.map(p => {
+    const statusTxt = p.d < 0 ? 'Vencida' : `${renovShort(p.date)}`;
+    const statusColor = p.d < 0 ? 'var(--nps-detrator)' : p.d <= 90 ? '#D97706' : 'var(--nps-promotor)';
+    const dateFmt = new Date(p.date + 'T00:00:00').toLocaleDateString('pt-BR');
+    return `<tr><td style="padding:5px 8px;">${p.l}</td><td style="padding:5px 8px;text-align:right;color:var(--text-muted);">${dateFmt}</td><td style="padding:5px 8px;text-align:right;font-weight:700;color:${statusColor}">${statusTxt}</td></tr>`;
+  }).join('');
+
+  function toggleRenovTable(btn) {
+    const wrap = document.getElementById('renovTableWrap');
+    const opening = wrap.style.display === 'none';
+    wrap.style.display = opening ? 'block' : 'none';
+    btn.textContent = opening ? 'Ver menos ▴' : 'Ver todas as renovações ▾';
+  }
 
   // ── INSIGHTS POR ETAPA ───────────────────────────────────────────────
   const etapaMap = {};
