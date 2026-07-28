@@ -6,7 +6,52 @@ const CLIENTS      = ['Volvo', 'Tramontina', 'BHP', 'Unilever Foods', 'Skechers'
 const DATA_NPS     = [10, 6, 10, 8, 9, 1, 9, 5, 7, 8, 7, 7, 8, 5, 8, 5, 10, 10, 8, 10, 7, 2, 10, 10, 10, 9, 9, 9, 7, 8, 8, 9, 9, 8, 1, 8, 5, 7, 10, 3, 5];
 const DATA_IMPACTO = [9,  8, 10, 8, 8, 7, 8, 7, 6, 6, 7, 7, 8, 5, 6, 8, 7, 9, 10, 8, 8, 1, 6, 9, 8, 8, 9, 8, 2, 7, 8, 8, 9, 6, 2, 7, 8, 7, 7, 3, 10];
 const DATA_ONBOARD = [10, 6, 10, 8, 9, 1, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]; // null para clientes Ongoing
-const DATA_RENOVACAO = ['2026-12-21', '2027-02-08', '2027-03-23', '2027-01-22', '2027-02-08', '2026-12-08']; // Skechers/Vulcabras: via Vitally — só clientes Onboarding têm data de renovação conhecida; Ongoing ainda não têm essa data mapeada
+// Datas de renovação (nextRenewalDate) via Vitally, buscadas em 28/07/2026 para todos os 41 clientes — null = sem data cadastrada no Vitally.
+// ATENÇÃO: algumas datas retornadas pelo Vitally já passaram (CCEE, Grandfood, Electrolux, Mondelez, Americanas) — provavelmente contrato com
+// renovação automática cujo campo não foi atualizado; o painel sinaliza como "Vencida" em vez de esconder, mas vale confirmar com o time comercial.
+const DATA_RENOVACAO = [
+  '2026-12-21', // Volvo
+  '2027-02-08', // Tramontina
+  '2027-03-23', // BHP
+  '2027-01-22', // Unilever Foods
+  '2027-02-08', // Skechers
+  '2026-12-08', // Vulcabras
+  '2026-09-21', // Insper
+  '2026-09-08', // Cruzeiro do Sul
+  '2026-05-18', // Ajinomoto
+  '2026-12-03', // Sicredi
+  '2027-01-06', // BTG Pactual
+  null,         // Banco PAN — sem data cadastrada no Vitally
+  '2027-01-19', // Iguatemi
+  '2027-01-25', // BYD
+  '2027-04-20', // Intelbras
+  '2028-02-26', // VLI
+  '2026-12-31', // Amaggi
+  '2026-12-31', // Unilever Beauty
+  '2028-05-25', // Thales
+  '2026-08-31', // CTG Brasil
+  '2027-02-28', // EMAE
+  '2027-10-05', // KPMG
+  '2027-02-21', // Iretail
+  '2026-10-30', // Carrefour
+  '2026-12-31', // JTI
+  '2025-07-04', // CCEE — data já passada no Vitally
+  '2027-03-31', // Alpargatas
+  '2026-12-01', // PetroReconcavo
+  '2026-10-15', // Cubo Itaú
+  '2028-02-28', // Ancar Ivanhoe
+  '2026-01-21', // Grandfood — data já passada no Vitally
+  '2026-08-15', // Cesbe
+  '2025-05-22', // Electrolux — data já passada no Vitally
+  '2026-05-06', // Mondelez — data já passada no Vitally
+  '2027-04-08', // Organon
+  '2026-02-13', // Americanas — data já passada no Vitally
+  '2027-06-29', // Ultrapar
+  '2026-11-09', // Yara
+  '2028-01-09', // Sendas
+  '2026-12-15', // ZF Automotive
+  '2026-11-24', // Heineken
+];
 
 // Médias do ciclo anterior — atualizar antes de adicionar novos clientes
 // null = sem ciclo anterior (não exibe)
