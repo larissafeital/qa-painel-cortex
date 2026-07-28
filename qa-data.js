@@ -2,10 +2,10 @@
 // Edite apenas este arquivo ao adicionar novos clientes.
 // O painel HTML carrega este arquivo automaticamente.
 
-const CLIENTS      = ['Volvo', 'Tramontina', 'BHP', 'Unilever Foods', 'Skechers', 'Vulcabras', "Insper", "Cruzeiro do Sul", "Ajinomoto", "Sicredi", "BTG Pactual", "Banco PAN", "Iguatemi", "BYD", "Intelbras", "VLI", "Amaggi", "Unilever Beauty", "Thales", "CTG Brasil", "EMAE", "KPMG", "Iretail", "Carrefour", "JTI", "CCEE", "Alpargatas", "PetroReconcavo", "Cubo Itaú", "Ancar Ivanhoe", "Grandfood", "Cesbe", "Electrolux", "Mondelez", "Organon", "Americanas", "Ultrapar", "Yara", "Sendas", "ZF Automotive", "Heineken", "Yara (2)"];
-const DATA_NPS     = [10, 6, 10, 8, 9, 1, 9, 5, 7, 8, 7, 7, 8, 5, 8, 5, 10, 10, 8, 10, 7, 2, 10, 10, 10, 9, 9, 9, 7, 8, 8, 9, 9, 8, 1, 8, 5, 9, 10, 3, 5, 7];
-const DATA_IMPACTO = [9,  8, 10, 8, 8, 7, 8, 7, 6, 6, 7, 7, 8, 5, 6, 8, 7, 9, 10, 8, 8, 1, 6, 9, 8, 8, 9, 8, 2, 7, 8, 8, 9, 6, 2, 7, 8, 9, 7, 3, 10, 7];
-const DATA_ONBOARD = [10, 6, 10, 8, 9, 1, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]; // null para clientes Ongoing
+const CLIENTS      = ['Volvo', 'Tramontina', 'BHP', 'Unilever Foods', 'Skechers', 'Vulcabras', "Insper", "Cruzeiro do Sul", "Ajinomoto", "Sicredi", "BTG Pactual", "Banco PAN", "Iguatemi", "BYD", "Intelbras", "VLI", "Amaggi", "Unilever Beauty", "Thales", "CTG Brasil", "EMAE", "KPMG", "Iretail", "Carrefour", "JTI", "CCEE", "Alpargatas", "PetroReconcavo", "Cubo Itaú", "Ancar Ivanhoe", "Grandfood", "Cesbe", "Electrolux", "Mondelez", "Organon", "Americanas", "Ultrapar", "Yara", "Sendas", "ZF Automotive", "Heineken"]; // Yara: 2 QAs (abr e jul/2026) — ver HISTORICO['Yara'], valor atual = QA mais recente
+const DATA_NPS     = [10, 6, 10, 8, 9, 1, 9, 5, 7, 8, 7, 7, 8, 5, 8, 5, 10, 10, 8, 10, 7, 2, 10, 10, 10, 9, 9, 9, 7, 8, 8, 9, 9, 8, 1, 8, 5, 7, 10, 3, 5];
+const DATA_IMPACTO = [9,  8, 10, 8, 8, 7, 8, 7, 6, 6, 7, 7, 8, 5, 6, 8, 7, 9, 10, 8, 8, 1, 6, 9, 8, 8, 9, 8, 2, 7, 8, 8, 9, 6, 2, 7, 8, 7, 7, 3, 10];
+const DATA_ONBOARD = [10, 6, 10, 8, 9, 1, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]; // null para clientes Ongoing
 const DATA_RENOVACAO = ['2026-12-21', '2027-02-08', '2027-03-23', '2027-01-22', '2027-02-08', '2026-12-08']; // Skechers/Vulcabras: via Vitally — só clientes Onboarding têm data de renovação conhecida; Ongoing ainda não têm essa data mapeada
 
 // Médias do ciclo anterior — atualizar antes de adicionar novos clientes
@@ -56,11 +56,13 @@ const HISTORICO = {
   "Organon": [{ data: "2026-04-17", nps: 1, impacto: 2, onboarding: null, elogios: ["Atendimento"], criticas: ["Produto", "Produto"] }],
   "Americanas": [{ data: "2026-04-17", nps: 8, impacto: 7, onboarding: null, elogios: ["Escopo Contratado"], criticas: ["Touchpoints", "Produto"] }],
   "Ultrapar": [{ data: "2026-04-22", nps: 5, impacto: 8, onboarding: null, elogios: ["Atendimento"], criticas: ["Produto", "Atendimento"] }],
-  "Yara": [{ data: "2026-04-29", nps: 9, impacto: 9, onboarding: null, elogios: ["Produto", "Atendimento"], criticas: ["Produto"] }],
+  "Yara": [
+    { data: "2026-04-29", nps: 9, impacto: 9, onboarding: null, elogios: ["Produto", "Atendimento"], criticas: ["Produto"] },
+    { data: "2026-07-02", nps: 7, impacto: 7, onboarding: null, elogios: ["Produto", "Atendimento"], criticas: ["Produto"] }
+  ],
   "Sendas": [{ data: "2026-04-30", nps: 10, impacto: 7, onboarding: null, elogios: ["Escopo Contratado", "Atendimento"], criticas: ["Produto", "Touchpoints"] }],
   "ZF Automotive": [{ data: "2026-05-19", nps: 3, impacto: 3, onboarding: null, elogios: ["Atendimento"], criticas: ["Produto", "Escopo Contratado"] }],
   "Heineken": [{ data: "2026-05-21", nps: 5, impacto: 10, onboarding: null, elogios: ["Atendimento"], criticas: ["Produto", "Touchpoints"] }],
-  "Yara (2)": [{ data: "2026-07-02", nps: 7, impacto: 7, onboarding: null, elogios: ["Produto", "Atendimento"], criticas: ["Produto"] }],
 };
 
 // Descritivos por etapa — alimenta o modal de detalhe no gráfico
@@ -93,7 +95,7 @@ const INSIGHTS = {
       { cliente: "Electrolux", texto: "Cliente destaca que a inteligência de dados da plataforma permitiu defender o valor da área de comunicação para o negócio." },
       { cliente: "Mondelez", texto: "Cliente reconhece boa performance da plataforma e valoriza os alertas por WhatsApp." },
       { cliente: "Yara", texto: "Cliente considera que o projeto cumpre plenamente os objetivos estratégicos de comunicação, com insights valiosos sobre marca e concorrentes." },
-      { cliente: "Yara (2)", texto: "Cliente reconhece que a recorrência de erros no clipping diminuiu e que a captura atingiu 99,9% de eficácia após ajustes." }
+      { cliente: "Yara", texto: "Cliente reconhece que a recorrência de erros no clipping diminuiu e que a captura atingiu 99,9% de eficácia após ajustes." }
     ],
     criticas: [
       { cliente: "Cruzeiro do Sul", texto: "Cliente relata dados pouco fidedignos, com indicador de impacto com variações inexplicáveis que exigem ajuste manual." },
@@ -130,7 +132,7 @@ const INSIGHTS = {
       { cliente: "Sendas", texto: "Cliente aponta que a usabilidade e o tempo de carregamento da plataforma precisam melhorar." },
       { cliente: "ZF Automotive", texto: "Cliente relata inconsistências recorrentes e retrabalho constante, com 156 solicitações técnicas reportadas." },
       { cliente: "Heineken", texto: "Cliente relata dificuldades na classificação precisa de resultados e falhas no tempo de atualização dos painéis." },
-      { cliente: "Yara (2)", texto: "Cliente relata dificuldade na interpretação de métricas de audiência, que ainda exige correções manuais recorrentes." }
+      { cliente: "Yara", texto: "Cliente relata dificuldade na interpretação de métricas de audiência, que ainda exige correções manuais recorrentes." }
     ]
   },
   'Implantação': {
@@ -191,7 +193,7 @@ const INSIGHTS = {
       { cliente: "Sendas", texto: "Cliente elogia a qualidade do atendimento de CS." },
       { cliente: "ZF Automotive", texto: "Cliente reconhece que a equipe de suporte e CS é solícita no atendimento via WhatsApp." },
       { cliente: "Heineken", texto: "Cliente reconhece qualidade no atendimento de CS e no SLA de captação." },
-      { cliente: "Yara (2)", texto: "Cliente elogia a melhoria nos canais de comunicação, como o WhatsApp, para o alinhamento do dia a dia." }
+      { cliente: "Yara", texto: "Cliente elogia a melhoria nos canais de comunicação, como o WhatsApp, para o alinhamento do dia a dia." }
     ],
     criticas: [
       { cliente: 'Tramontina', texto: 'Processo para ajuste de classificações opaco — cliente ficou sem orientação clara para resolver problemas operacionais.' },

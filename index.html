@@ -417,7 +417,8 @@
   <h1>QA Onboarding | Painel de Resultados</h1>
   <div class="meta">
     <span class="badge">Cortex PR</span>
-    <span class="badge">42 clientes</span>
+    <span class="badge">41 clientes</span>
+    <span class="badge">42 QAs</span>
     <span class="badge gray">Última atualização: 28/07/2026</span>
   </div>
 </div>
@@ -961,17 +962,17 @@
     <div class="voz-autor">— Equipe Ultrapar (Ipiranga)</div>
   </div>
 
-  <div class="voz-card promotor">
-    <div class="voz-pattern">Yara · NPS 9</div>
+  <div class="voz-card inocuo">
+    <div class="voz-pattern">Yara · 2 QAs (abr → jul/2026)</div>
     <ul class="voz-bullets">
-      <li>"Os objetivos têm sido plenamente alcançados: extrair nossa participação em temas específicos e a exposição frente aos concorrentes tem sido o ponto mais relevante do projeto."</li>
+      <li>"Abr/26 — Os objetivos têm sido plenamente alcançados: extrair nossa participação em temas específicos e a exposição frente aos concorrentes tem sido o ponto mais relevante do projeto." (NPS 9)</li>
     </ul>
     <div class="voz-extra">
       <ul class="voz-bullets" style="margin:0;">
-        <li>"A necessidade de intervenção manual no clipping ainda gera custo operacional ineficiente; o sonho seria ter uma métrica de reputação mais ampla, que capturasse a percepção junto a stakeholders além da imprensa."</li>
+        <li>"Jul/26 — A recorrência de erros no clipping diminuiu, o que indica um avanço positivo desde a última conversa; ainda temos dificuldades na interpretação de métricas de audiência, que exigem correções manuais recorrentes." (NPS 7)</li>
       </ul>
     </div>
-    <div class="voz-autor">— Thiago Coletti · Yara</div>
+    <div class="voz-autor">— Thiago Coletti / Silvio Moura · Yara</div>
   </div>
 
   <div class="voz-card promotor">
@@ -1013,19 +1014,6 @@
     <div class="voz-autor">— Equipe Heineken</div>
   </div>
 
-  <div class="voz-card inocuo">
-    <div class="voz-pattern">Yara (2) · NPS 7</div>
-    <ul class="voz-bullets">
-      <li>"A recorrência de erros no clipping diminuiu, o que indica um avanço positivo desde a última conversa, e a entrega tem respeitado o horário limite das 8:30."</li>
-    </ul>
-    <div class="voz-extra">
-      <ul class="voz-bullets" style="margin:0;">
-        <li>"Ainda temos dificuldades na interpretação de métricas de audiência, o que impacta a precisão e ainda exige correções manuais recorrentes."</li>
-      </ul>
-    </div>
-    <div class="voz-autor">— Silvio Moura · Yara</div>
-  </div>
-
 </div>
 
 <!-- RENOVAÇÃO & EVOLUÇÃO -->
@@ -1045,6 +1033,27 @@
   </div>
   <div class="charts-row cols-1">
     <div class="chart-card" style="padding:28px 28px 24px;" id="cardTendencia"></div>
+  </div>
+</div>
+
+<!-- LINHA DO TEMPO & TRIMESTRES -->
+<div class="renov-section">
+  <div class="renov-section-title">Linha do Tempo & Resultados por Trimestre</div>
+  <div class="charts-row cols-2" style="margin-bottom:20px;">
+    <div class="chart-card" style="padding:28px 28px 24px;">
+      <div class="chart-title">QAs por Semana</div>
+      <div class="chart-sub">Volume de QAs realizados e NPS médio · por semana ISO</div>
+      <canvas id="chartTimelineSemanal" height="170"></canvas>
+    </div>
+    <div class="chart-card" style="padding:28px 28px 24px;">
+      <div class="chart-title">QAs por Mês</div>
+      <div class="chart-sub">Volume de QAs realizados e NPS médio · por mês</div>
+      <canvas id="chartTimelineMensal" height="170"></canvas>
+    </div>
+  </div>
+  <div class="table-card" style="padding:24px;">
+    <div class="section-title">Resultados por Trimestre</div>
+    <div class="stat-row" id="quarterCards" style="margin-top:0;margin-bottom:0;grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));"></div>
   </div>
 </div>
 
@@ -1562,7 +1571,7 @@
         <td>1</td>
       </tr>
       <tr>
-        <td><strong>Yara (2)</strong></td>
+        <td><strong>Yara</strong> <span style="font-size:10px;color:var(--text-muted);font-weight:600">(2º QA)</span></td>
         <td><span class="tag t-ongoing">Ongoing</span></td>
         <td>02/07/2026</td>
         <td><span class="score s-yellow">7</span></td>
@@ -2065,13 +2074,16 @@
     }
   });
 
-  // ── TENDÊNCIA DE NOTAS ────────────────────────────────────────────────
-  const maxCycles = Math.max(...CLIENTS.map(c => (HISTORICO[c] || []).length));
+  // ── TENDÊNCIA DE NOTAS (variação de QAs da mesma empresa) ─────────────
+  // Só entram clientes com 2+ ciclos de QA registrados (repetição real de QA na mesma conta).
+  // Usa NPS como métrica (funciona tanto para Onboarding quanto para Ongoing; Onboarding usa a mesma nota).
+  const multiCycleClients = CLIENTS.filter(c => (HISTORICO[c] || []).length >= 2);
+  const maxCycles = multiCycleClients.length ? Math.max(...multiCycleClients.map(c => HISTORICO[c].length)) : 0;
   const cardTendencia = document.getElementById('cardTendencia');
 
   if (maxCycles < 2) {
     cardTendencia.innerHTML = `
-      <div class="chart-title">Tendência de Notas de Onboarding</div>
+      <div class="chart-title">Tendência de Notas (variação por cliente)</div>
       <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:160px;gap:10px;color:var(--text-placeholder);text-align:center;">
         <span style="font-size:32px;">📈</span>
         <span style="font-size:13px;font-weight:600;color:var(--text-muted);">Disponível a partir do 2º ciclo de QA</span>
@@ -2079,20 +2091,21 @@
       </div>`;
   } else {
     cardTendencia.innerHTML = `
-      <div class="chart-title">Tendência de Notas de Onboarding</div>
-      <div class="chart-sub">Evolução por ciclo de QA</div>
+      <div class="chart-title">Tendência de Notas — NPS (clientes com 2+ QAs)</div>
+      <div class="chart-sub">Evolução por ciclo de QA · ${multiCycleClients.length} cliente${multiCycleClients.length !== 1 ? 's' : ''} com repetição</div>
       <canvas id="chartTendencia" height="110"></canvas>`;
-    const trendBorders = ['rgba(139,45,191,1)', 'rgba(146,27,69,1)', 'rgba(0,77,58,1)'];
+    const trendPalette = ['rgba(139,45,191,1)', 'rgba(146,27,69,1)', 'rgba(0,77,58,1)', 'rgba(214,74,23,1)', 'rgba(30,120,190,1)', 'rgba(245,160,32,1)'];
     const cycleLabels = Array.from({ length: maxCycles }, (_, i) => `QA ${i + 1}`);
-    const trendDatasets = CLIENTS.map((client, i) => {
-      const hist = HISTORICO[client] || [];
+    const trendDatasets = multiCycleClients.map((client, i) => {
+      const hist = HISTORICO[client];
+      const color = trendPalette[i % trendPalette.length];
       return {
         label: client,
-        data: cycleLabels.map((_, idx) => hist[idx] ? hist[idx].onboarding : null),
-        borderColor: trendBorders[i],
+        data: cycleLabels.map((_, idx) => hist[idx] ? hist[idx].nps : null),
+        borderColor: color,
         backgroundColor: '#fff',
         pointRadius: 8, pointHoverRadius: 10,
-        pointBorderWidth: 3, pointBorderColor: trendBorders[i], pointBackgroundColor: '#fff',
+        pointBorderWidth: 3, pointBorderColor: color, pointBackgroundColor: '#fff',
         tension: 0.3, spanGaps: false, borderWidth: 2,
       };
     });
@@ -2104,7 +2117,10 @@
         layout: { padding: { top: 20, right: 12 } },
         plugins: {
           legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 }, padding: 16 } },
-          tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${c.raw ?? '—'}` } },
+          tooltip: { callbacks: {
+            title: c => `${c[0].dataset.label} — ${c[0].label}`,
+            label: c => ` NPS: ${c.raw ?? '—'} (${HISTORICO[c.dataset.label][c.dataIndex] ? HISTORICO[c.dataset.label][c.dataIndex].data.split('-').reverse().join('/') : ''})`
+          } },
           datalabels: { anchor: 'top', align: 'top', offset: 6, color: '#475569', font: { size: 11, weight: '700' }, formatter: v => v ?? '' }
         },
         scales: {
@@ -2114,6 +2130,124 @@
       }
     });
   }
+
+  // ── LINHA DO TEMPO (semanal e mensal) + RESULTADOS POR TRIMESTRE ──────
+  // Achata HISTORICO em uma lista de eventos de QA (1 por ciclo, de qualquer cliente)
+  const QA_EVENTS = [];
+  CLIENTS.forEach(c => {
+    (HISTORICO[c] || []).forEach(q => QA_EVENTS.push({ cliente: c, data: q.data, nps: q.nps, impacto: q.impacto }));
+  });
+  QA_EVENTS.sort((a, b) => a.data < b.data ? -1 : a.data > b.data ? 1 : 0);
+
+  function isoWeekLabel(dateStr) {
+    const d = new Date(dateStr + 'T00:00:00');
+    const target = new Date(d.valueOf());
+    const dayNr = (d.getDay() + 6) % 7; // segunda=0
+    target.setDate(target.getDate() - dayNr + 3);
+    const firstThursday = new Date(target.getFullYear(), 0, 4);
+    const week = 1 + Math.round(((target - firstThursday) / 86400000 - 3 + ((firstThursday.getDay() + 6) % 7)) / 7);
+    return `${target.getFullYear()}-S${String(week).padStart(2, '0')}`;
+  }
+  function monthLabel(dateStr) {
+    const [y, m] = dateStr.split('-');
+    const MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+    return `${MESES[parseInt(m, 10) - 1]}/${y.slice(2)}`;
+  }
+  function quarterLabel(dateStr) {
+    const [y, m] = dateStr.split('-');
+    const q = Math.ceil(parseInt(m, 10) / 3);
+    return `Q${q} ${y}`;
+  }
+
+  function groupBy(events, keyFn) {
+    const map = {};
+    events.forEach(e => {
+      const k = keyFn(e.data);
+      if (!map[k]) map[k] = [];
+      map[k].push(e);
+    });
+    return map;
+  }
+
+  function avg(arr) { return arr.reduce((a, b) => a + b, 0) / arr.length; }
+
+  // -- Semanal --
+  const weekMap = groupBy(QA_EVENTS, isoWeekLabel);
+  const weekKeys = Object.keys(weekMap).sort();
+  new Chart('chartTimelineSemanal', {
+    data: {
+      labels: weekKeys,
+      datasets: [
+        { type: 'bar', label: 'QAs realizados', data: weekKeys.map(k => weekMap[k].length), backgroundColor: 'rgba(139,45,191,0.65)', borderRadius: 4, yAxisID: 'y' },
+        { type: 'line', label: 'NPS médio', data: weekKeys.map(k => +avg(weekMap[k].map(e => e.nps)).toFixed(1)), borderColor: 'rgba(146,27,69,1)', backgroundColor: '#fff', pointRadius: 4, pointBackgroundColor: 'rgba(146,27,69,1)', tension: 0.3, yAxisID: 'y1' },
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } },
+        tooltip: { callbacks: { label: c => c.dataset.yAxisID === 'y1' ? ` NPS médio: ${c.raw}` : ` ${c.raw} QA${c.raw !== 1 ? 's' : ''}` } },
+        datalabels: { display: false },
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { autoSkip: true, maxTicksLimit: 12 } },
+        y:  { position: 'left',  min: 0, ticks: { stepSize: 1 }, grid: { color: GRID_COLOR }, title: { display: true, text: 'QAs', font: { size: 10 } } },
+        y1: { position: 'right', min: 0, max: 10, ticks: { stepSize: 2 }, grid: { display: false }, title: { display: true, text: 'NPS médio', font: { size: 10 } } },
+      }
+    }
+  });
+
+  // -- Mensal --
+  const monthMap = groupBy(QA_EVENTS, monthLabel);
+  const monthOrder = Object.keys(groupBy(QA_EVENTS, d => d.slice(0,7))).sort().map(k => monthLabel(k + '-01'));
+  new Chart('chartTimelineMensal', {
+    data: {
+      labels: monthOrder,
+      datasets: [
+        { type: 'bar', label: 'QAs realizados', data: monthOrder.map(k => monthMap[k].length), backgroundColor: 'rgba(0,77,58,0.7)', borderRadius: 6, yAxisID: 'y' },
+        { type: 'line', label: 'NPS médio', data: monthOrder.map(k => +avg(monthMap[k].map(e => e.nps)).toFixed(1)), borderColor: 'rgba(146,27,69,1)', backgroundColor: '#fff', pointRadius: 5, pointBackgroundColor: 'rgba(146,27,69,1)', tension: 0.3, yAxisID: 'y1' },
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } },
+        tooltip: { callbacks: { label: c => c.dataset.yAxisID === 'y1' ? ` NPS médio: ${c.raw}` : ` ${c.raw} QA${c.raw !== 1 ? 's' : ''}` } },
+        datalabels: {
+          display: ctx => ctx.datasetIndex === 0,
+          anchor: 'end', align: 'end', color: '#475569', font: { size: 11, weight: '700' }, formatter: v => v,
+        },
+      },
+      scales: {
+        x: { grid: { display: false } },
+        y:  { position: 'left',  min: 0, ticks: { stepSize: 2 }, grid: { color: GRID_COLOR }, title: { display: true, text: 'QAs', font: { size: 10 } } },
+        y1: { position: 'right', min: 0, max: 10, ticks: { stepSize: 2 }, grid: { display: false }, title: { display: true, text: 'NPS médio', font: { size: 10 } } },
+      }
+    }
+  });
+
+  // -- Trimestral --
+  const quarterMap = groupBy(QA_EVENTS, quarterLabel);
+  const quarterKeys = Object.keys(quarterMap).sort((a, b) => {
+    const [qa, ya] = a.split(' '); const [qb, yb] = b.split(' ');
+    return ya !== yb ? ya - yb : qa.slice(1) - qb.slice(1);
+  });
+  document.getElementById('quarterCards').innerHTML = quarterKeys.map(k => {
+    const evs = quarterMap[k];
+    const npsAvg = avg(evs.map(e => e.nps));
+    const impAvg = avg(evs.map(e => e.impacto));
+    const promotores = evs.filter(e => e.nps >= 9).length;
+    const detratores = evs.filter(e => e.nps <= 6).length;
+    const tier = npsAvg >= 9 ? 'green' : npsAvg >= 7 ? 'yellow' : 'red';
+    const tierColor = { green: 'var(--nps-promotor)', yellow: '#2E8FB5', red: 'var(--nps-detrator)' }[tier];
+    return `<div class="stat-card" style="gap:8px;">
+      <div class="stat-label">${k}</div>
+      <div class="stat-value" style="font-size:22px;color:${tierColor}">${npsAvg.toFixed(1)}</div>
+      <div class="stat-sub">NPS médio · ${evs.length} QA${evs.length !== 1 ? 's' : ''}</div>
+      <div class="stat-sub">Impacto médio: <strong>${impAvg.toFixed(1)}</strong></div>
+      <div class="stat-sub">${promotores} promotor${promotores !== 1 ? 'es' : ''} · ${detratores} detrator${detratores !== 1 ? 'es' : ''}</div>
+    </div>`;
+  }).join('');
 
   function showEtapaDetail(etapa) {
     const data = typeof INSIGHTS !== 'undefined' && INSIGHTS[etapa];
